@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.whut.mapper.EmployeeMapper">
+
+    <!-- Insert Employee -->
+    <insert id="addEmployee" parameterType="Employee">
+        INSERT INTO Employee
+        VALUES (
+                   #{employeeNo}, #{title}, #{firstName}, #{middleName}, #{lastName}, #{address},
+                   #{workTelExt}, #{homeTelNo}, #{empEmailAddress},
+                   #{socialSecurityNumber}, #{DOB}, #{position}, #{gender}, #{salary}, #{dateStarted}, #{outletNo}
+               )
+    </insert>
+
+    <!-- delete Employee by ids -->
+    <delete id="deleteEmployeeByIds">
+        delete from Employee where employeeNo in
+        <foreach collection="ids" item="employeeNo" separator="," open="(" close=")">
+            #{employeeNo}
+        </foreach>
+    </delete>
+
+    <!-- Update Employee -->
+    <update id="updateEmployee" parameterType="Employee">
+        UPDATE Employee
+        SET
+            title = #{title},
+            firstName = #{firstName},
+            middleName = #{middleName},
+            lastName = #{lastName},
+            address = #{address},
+            workTelExt = #{workTelExt},
+            homeTelNo = #{homeTelNo},
+            empEmailAddress = #{empEmailAddress},
+            socialSecurityNumber = #{socialSecurityNumber},
+            DOB = #{DOB},
+            position = #{position},
+            gender = #{gender},
+            salary = #{salary},
+            dateStarted = #{dateStarted},
+            outletNo = #{outletNo}
+        WHERE employeeNo = #{employeeNo}
+    </update>
+
+    <select id="selectEmployeeByPageAndCondition" resultType="Employee">
+        SELECT *
+        FROM Employee
+        <where>
+            <if test="employee.employeeNo != null and employee.employeeNo != ''">
+                AND employeeNo = #{employee.employeeNo}
+            </if>
+
+            <if test="employee.title != null and employee.title != ''">
+                AND title like #{employee.title}
+            </if>
+
+            <if test="employee.firstName != null and employee.firstName != ''">
+                AND firstName like #{employee.firstName}
+            </if>
+
+            <if test="employee.middleName != null and employee.middleName != ''">
+                AND middleName like #{employee.middleName}
+            </if>
+
+            <if test="employee.lastName != null and employee.lastName != ''">
+                AND lastName like #{employee.lastName}
+            </if>
+
+            <if test="employee.position != null and employee.position != ''">
+                AND position like #{employee.position}
+            </if>
+
+            <if test="employee.gender != null and employee.gender != ''">
+                AND gender = #{employee.gender}
+            </if>
+
+            <if test="employee.salary != null and employee.salary != '' ">
+                AND salary >= #{employee.salary}
+            </if>
+
+            <if test="employee.dateStarted != null and employee.dateStarted != '' ">
+                AND dateStarted >= #{employee.dateStarted}
+            </if>
+
+            <if test="employee.outletNo != null and employee.outletNo != '' ">
+                AND outletNo = #{employee.outletNo}
+            </if>
+        </where>
+        LIMIT #{begin}, #{size}
+    </select>
+
+    <select id="selectEmployeeCountByCondition" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM Employee
+        <where>
+            <if test="employeeNo != null and employeeNo != ''">
+                AND employeeNo = #{employeeNo}
+            </if>
+
+            <if test="title != null and title != ''">
+                AND title like #{title}
+            </if>
+
+            <if test="firstName != null and firstName != ''">
+                AND firstName like #{firstName}
+            </if>
+
+            <if test="middleName != null and middleName != ''">
+                AND middleName like #{middleName}
+            </if>
+
+            <if test="lastName != null and lastName != ''">
+                AND lastName like #{lastName}
+            </if>
+
+            <if test="position != null and position != ''">
+                AND position like #{position}
+            </if>
+
+            <if test="gender != null and gender != ''">
+                AND gender = #{gender}
+            </if>
+
+            <if test="salary != null and salary != '' ">
+                AND salary >= #{salary}
+            </if>
+
+            <if test="dateStarted != null and dateStarted != '' ">
+                AND dateStarted >= #{dateStarted}
+            </if>
+
+            <if test="outletNo != null and outletNo != '' ">
+                AND outletNo = #{outletNo}
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

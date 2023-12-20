@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.whut.mapper.OutletMapper">
+
+    <delete id="deleteOutletByIds">
+        delete from Outlet where outletNo in 
+        <foreach collection="ids" item="outletNo" separator="," open="(" close=")">
+            #{outletNo}
+        </foreach> 
+    </delete>
+
+    <update id="updateOutlet" parameterType="Outlet">
+        UPDATE Outlet
+        SET
+            outletStreet = #{outletStreet},
+            outletCity = #{outletCity},
+            outletState = #{outletState},
+            outletZipCode = #{outletZipCode},
+            outletTelNo = #{outletTelNo},
+            outletFaxNo = #{outletFaxNo},
+        WHERE outletNo = #{outletNo};
+    </update>
+
+    <insert id="addOutlet" parameterType="Outlet">
+        INSERT INTO Outlet (
+            outletStreet, outletCity, outletState, outletZipCode,
+            outletTelNo, outletFaxNo
+        )
+        VALUES (
+                   #{outletStreet}, #{outletCity}, #{outletState}, #{outletZipCode},
+                   #{outletTelNo}, #{outletFaxNo}
+               )
+    </insert>
+
+    <select id="selectOutletByCondition" resultType="Outlet">
+        select * from outlet
+        <where>
+            <if test="outletStreet != null and outletStreet != '' ">
+                and outletStreet like #{outletStreet}
+            </if>
+
+            <if test="outletCity != null and outletCity != '' ">
+                and outletCity like #{outletCity}
+            </if>
+
+            <if test="outletState != null and outletState != '' ">
+                and outletState like #{outletState}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectOutletByPageAndCondition" resultType="Outlet">
+        select * from Outlet
+        <where>
+            <if test="outlet.outletNo != null and outlet.outletNo != '' ">
+                and outletNo = #{outlet.outletNo}
+            </if>
+
+            <if test="outlet.outletStreet != null and outlet.outletStreet != '' ">
+                and outletStreet like #{outlet.outletStreet}
+            </if>
+
+            <if test="outlet.outletCity != null and outlet.outletCity != '' ">
+                and outletCity like #{outlet.outletCity}
+            </if>
+
+            <if test="outlet.outletState != null and outlet.outletState != '' ">
+                and outletState like #{outlet.outletState}
+            </if>
+        </where>
+
+        limit #{begin}, #{size}
+    </select>
+
+    <select id="selectOutletCountByCondition" resultType="java.lang.Integer">
+        select count(*) from Outlet
+        <where>
+            <if test="outletNo != null and outletNo != '' ">
+                and outletNo = #{outletNo}
+            </if>
+
+            <if test="outletStreet != null and outletStreet != '' ">
+                and outletStreet like #{outletStreet}
+            </if>
+
+            <if test="outletCity != null and outletCity != '' ">
+                and outletCity like #{outletCity}
+            </if>
+
+            <if test="outletState != null and outletState != '' ">
+                and outletState like #{outletState}
+            </if>
+        </where>
+    </select>
+    
+</mapper>

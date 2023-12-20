@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天天租车</title>
+    <link rel="stylesheet" href="css/Home.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+
+    <!-- 顶部信息栏 -->
+    <div class="top-bar">
+        <p class="welcome-message">欢迎来到天天租车</p>
+        <p class="contact-number">服务咨询电话：8888888</p>
+    </div>
+
+    <!-- 导航栏 -->
+    <nav>
+        <div class="buttons">
+            <a href="#" class="nav-button">首页</a>
+            <a href="#" class="nav-button">门店</a>
+            <a href="#" class="nav-button">车辆信息</a>
+            <a href="#" class="nav-button">个人中心</a>
+        </div>
+    </nav>
+
+    <!-- 主要内容 -->
+    <main>
+        <!-- 门店信息 -->
+<section>
+    <h2>门店信息</h2>
+    <form id="outletForm">
+        <div class="form-group">
+            <label for="outletStreet">门店街道：</label>
+            <input type="text" id="outletStreet" name="outletStreet" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="outletCity">门店城市：</label>
+            <input type="text" id="outletCity" name="outletCity" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="outletState">门店州：</label>
+            <input type="text" id="outletState" name="outletState" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">查询</button>
+    </form>
+    <div id="outletInfo" class="mt-4"></div> <!-- 显示门店信息的地方 -->
+</section>
+
+
+        <!-- 门店介绍 -->
+        <section>
+            <h2>门店介绍</h2>
+            <p class="grey-text">全国连锁，值得信赖，数百家门店任您挑选</p>
+            <img src="image/case.png" alt="">
+        </section>
+
+        <!-- 公司介绍 -->
+        <section>
+            <h2>公司介绍</h2>
+            <p>欢迎使用我们的汽车租赁服务。提供100+车型，100+门店，安全保障，无限量程。</p>
+        </section>
+    </main>
+
+    <!-- 底部 -->
+    <footer>
+        <p>&copy; 2023 天天租车 | 技术支持：大数据2101蒋海潮</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="Outlet.js"></script>
+</body>
+</html>

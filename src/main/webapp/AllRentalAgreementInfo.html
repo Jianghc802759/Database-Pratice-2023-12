@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>数据库后端界面</title>
+  <link rel="stylesheet" type="text/css" href="css/AllClientInfo.css">
+  <style>
+    body {
+      background-image: url("imgs/beijing.jpg");
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center center;
+    }
+    .modal {
+      display: none; /* 默认隐藏模态框 */
+      /* 您可以根据需要进行其他样式设置，例如定位、背景色、尺寸等 */
+    }
+
+    /* 扩展样式：使模态框居中对齐 */
+    .modal-content {
+      margin: auto;
+      width: 50%;
+      border: 1px solid #888;
+      padding: 20px;
+    }
+
+    .close {
+      cursor: pointer;
+    }
+  </style>
+  <script >
+    var perPage = 10; //每页显示的项数
+    var currentPage = 0; //当前页码开始于0
+
+    window.addEventListener('DOMContentLoaded', (event) => {
+      var options = document.querySelectorAll('.sidebar a');
+
+      // 获取之前保存的选项索引
+      var selectedOptionIndex = localStorage.getItem('selectedOptionIndex');
+
+      options.forEach(function(option, index) {
+        option.addEventListener('click', function() {
+          // 更新选项的活动状态
+          setActiveOption(index);
+        });
+
+        // 根据之前保存的选项索引设置活动状态
+        if (index.toString() === selectedOptionIndex) {
+          setActiveOption(index);
+        }
+      });
+
+      function setActiveOption(index) {
+        // 移除之前保存的活动状态
+        var activeOption = document.querySelector('.sidebar a.active');
+        if (activeOption) {
+          activeOption.classList.remove('active');
+        }
+
+        // 添加点击选中的选项的活动状态
+        options[index].classList.add('active');
+
+        // 保存选项索引到localStorage
+        localStorage.setItem('selectedOptionIndex', index.toString());
+      }
+    });
+
+    function fetchData() {
+      fetch('/CarsRental/rentalAgreement/selectAllRentalAgreement')
+              .then(response => response.json())
+              .then(data => {
+                clients = data;  // 假设API返回的数据是一个对象数组
+
+                var tableArea = document.getElementById("clientTable");
+
+                // 清除在插入新表格之前的任何存在的子元素
+                while (tableArea.firstChild) {
+                  tableArea.removeChild(tableArea.firstChild);
+                }
+
+                var registerForm = createTable();  // 加载新的表格
+
+                tableArea.appendChild(registerForm);
+
+                refreshTable();
+              })
+              .catch(error => console.error('Error:', error));
+    }
+
+
+
+    function createTable() {
+      var table = document.createElement("table");
+      var start = currentPage * perPage;
+      var end = start + perPage;
+      var clientSubset = clients.slice(start, end);
+      table.className = "client-table";
+      table.id = "clientsTable";
+
+      var thead = document.createElement("thead");
+      var headerRow = document.createElement("tr");
+
+      var headers = [
+        "rentalNo",
+        "dateStart",
+        "timeStart",
+        "dateReturn",
+        "timeReturn",
+        "mileageBefore",
+        "mileageAfter",
+        "policyNo",
+        "insuranceCoverType",
+        "insurancePremium",
+        "clientNo",
+        "vehLicenseNo"
+      ];
+
+      headers.unshift("Select");
+
+      headers.forEach(function(header) {
+        var th = document.createElement("th");
+        th.textContent = header;
+        headerRow.appendChild(th);
+      });
+
+      thead.appendChild(headerRow);
+      table.appendChild(thead);
+
+      var tbody = document.createElement("tbody");
+
+      clientSubset.forEach(function(client) {
+        var row = document.createElement("tr");
+
+        var checkboxCell = document.createElement("td");
+        var checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.addEventListener('change', function () {
+          client["Select"] = this.checked ? "selected" : "";
+        });
+        checkboxCell.appendChild(checkbox);
+
+        var dataCells = headers.slice(1).map(function(header) {  // Skip the "Select" header
+          var cell = document.createElement("td");
+          cell.textContent = client[header];  // Use header name to get corresponding value from client
+          return cell;
+        });
+
+        dataCells.unshift(checkboxCell);
+
+        dataCells.forEach(function(cell) {
+          row.appendChild(cell);
+        });
+
+        tbody.appendChild(row);
+      });
+
+      table.appendChild(tbody);
+
+      return table;
+    }
+
+
+
+    function openAddClientModal() {
+      var modal = document.getElementById("addClientModal");
+      modal.style.display = "block";
+    }
+
+    function closeAddClientModal() {
+      var modal = document.getElementById("addClientModal");
+      modal.style.display = "none";
+    }
+
+    function addClient() {
+      var conditions = [
+        "rentalNo",
+        "dateStart",
+        "timeStart",
+        "dateReturn",
+        "timeReturn",
+        "mileageBefore",
+        "mileageAfter",
+        "policyNo",
+        "insuranceCoverType",
+        "insurancePremium",
+        "clientNo",
+        "vehLicenseNo"
+      ];
+
+
+      var inputs = document.getElementsByClassName("client-input");
+      var client = {};
+      for (var i = 0; i < conditions.length; i++) {
+        client[conditions[i]] = inputs[i].value;
+      }
+
+      fetch('/CarsRental/rentalAgreement/addRentalAgreement', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(client),
+      })
+              .then(response => {
+                if (!response.ok) {
+                  throw new Error("HTTP error " + response.status);
+                }
+                return response.text().then(function(text) {
+                  return text ? JSON.parse(text) : {}
+                })
+              })
+              .then(data => {
+                if (data.success) {
+                  // 提交成功，可以跳转到其他页面或者显示成功信息
+                  alert('信息添加成功！');
+                  var clientTableDiv = document.getElementById("clientTable");
+                  clientTableDiv.innerHTML = "";
+                  var clientTable = createTable();
+                  clientTableDiv.appendChild(clientTable);
+                  refreshTable()
+                  location.reload();  // 刷新页面
+                } else {
+                  // 提交失败，处理错误信息，例如显示错误提示
+                  alert('信息添加失败！');
+                  closeAddClientModal();
+                }
+
+
+              })
+              .catch((error) => {
+                console.error('Error:', error);
+              });
+
+    }
+
+    var clients = [];
+
+
+
+    window.addEventListener('DOMContentLoaded', function() {
+      currentPageIndicator = document.getElementById("currentPageIndicator");
+
+      fetchData();  // 这个函数会创建表格并加入到页面中
+
+      updatePageIndicator();
+    });
+
+
+    // 处理行的点击事件，选择行并更新弹窗数据
+    function handleRowClick(event) {
+      var row = event.target.parentElement;
+      selectRow(row);
+
+      if (row.classList.contains("selected")) {
+        openEditClientModal(row);
+      } else {
+        closeEditClientModal();
+      }
+    }
+
+    // 为表格的每一行添加点击事件监听器
+    var tableRows = document.querySelectorAll("#clientTable tbody tr");
+    for (var i = 0; i < tableRows.length; i++) {
+      tableRows[i].addEventListener("click", handleRowClick);
+    }
+
+    // 选中行的处理函数
+    function selectRow(row) {
+      row.classList.toggle("selected");
+    }
+
+    function openEditClientModal() {
+      var checkboxes = document.querySelectorAll('.client-table input[type="checkbox"]');
+      var selectedRow = null;
+      for (var i = 0; i < checkboxes.length; i++) {
+        if (checkboxes[i].checked) {
+          selectedRow = checkboxes[i].parentNode.parentNode;
+          break;
+        }
+      }
+
+      if (selectedRow === null) {
+        alert('请先选择一行进行编辑');
+        return;
+      }
+
+      var modal = document.getElementById("editClientModal");
+      modal.style.display = "block";
+
+      // 获取选中行的数据
+      var rowData = [];
+      var tableCells = selectedRow.getElementsByTagName("td");
+      for (var i = 1; i < tableCells.length; i++) { // 从 1 开始，跳过复选框单元格
+        rowData.push(tableCells[i].textContent);
+      }
+
+      // 在弹窗中填充选中行的数据
+      var editForm = document.getElementById("editClientForm");
+      var inputFields = editForm.getElementsByClassName("client-input");
+      for (var j = 0; j < inputFields.length; j++) {
+        inputFields[j].value = rowData[j+1];
+      }
+      // 在保存数据到编辑模态窗口的时候
+      editForm.dataset.rentalNo = rowData[0]; // rowData[0] 是当前行的 clientNo
+
+      // 设置当前行的索引作为属性，方便保存时更新相应的表格行
+      editForm.setAttribute("data-rowIndex", selectedRow.rowIndex - 1);
+    }
+
+
+    // 关闭弹窗
+    function closeEditClientModal() {
+      var modal = document.getElementById("editClientModal");
+      modal.style.display = "none";
+    }
+
+    // 保存修改
+    function saveEditedClient() {
+      // 从编辑表单中获取数据
+      var editForm = document.getElementById("editClientForm");
+      var inputFields = editForm.getElementsByClassName("client-input");
+
+      var rowData = [];
+      var client = {};
+
+      // 在保存编辑后信息给服务器的时候
+      client.rentalNo = editForm.dataset.rentalNo; // 获取保存在编辑模态窗口内的 employeeNo
+
+
+      for(var i = 1; i < inputFields.length; i++) {
+        rowData.push(inputFields[i].value);
+      }
+
+      // 我假设每个 "inputFields" 对应的名称 (name) 是和 "conditions" 里的一样
+      var conditions = [
+        "dateStart",
+        "timeStart",
+        "dateReturn",
+        "timeReturn",
+        "mileageBefore",
+        "mileageAfter",
+        "policyNo",
+        "insuranceCoverType",
+        "insurancePremium",
+        "clientNo",
+        "vehLicenseNo"
+      ];
+
+      for (var i = 0; i < conditions.length; i++) {
+        client[conditions[i]] = inputFields[i].value;
+      }
+
+      // 假设 'data-rowIndex' 属性保存了惟一的客户ID
+      var clientId = editForm.getAttribute('data-rowIndex');
+
+      fetch(`/CarsRental/rentalAgreement/updateRentalAgreement`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(client),
+      })
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.success) {
+                  // 提交成功，可以跳转到其他页面或者显示成功信息
+                  alert('信息修改成功！');
+                  location.reload();  // 刷新页面
+                } else {
+                  // 提交失败，处理错误信息，例如显示错误提示
+                  alert('信息修改失败！');
+                  closeEditClientModal();
+                }
+
+
+              })
+              .catch((error) => {
+                console.error('Error:', error);
+              });
+    }
+
+
+    // 删除信息
+    function deleteClients() {
+      var checkboxes = document.querySelectorAll('.client-table input[type="checkbox"]');
+
+      // 创建一个数组用于保存所有选择的客户的完整信息
+      var clientsToDelete = [];
+
+      checkboxes.forEach((checkbox, index) => {
+        if (checkbox.checked) {
+          var row = checkbox.parentNode.parentNode;
+          clientsToDelete.push(row.children[1].textContent);
+        }
+      });
+
+      // 使用 JSON.stringify 将对象数组转换为 JSON 字符串
+      var requestBody = JSON.stringify(clientsToDelete);
+
+      fetch(`/CarsRental/rentalAgreement/deleteRentalAgreementByIds`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: requestBody,
+      })
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.success) {
+                  // 提交成功，可以跳转到其他页面或者显示成功信息
+                  alert('信息删除成功！');
+                  checkboxes.forEach((checkbox) => {
+                    if (checkbox.checked) {
+                      checkbox.parentNode.parentNode.remove();
+                    }
+                  });
+                  refreshTable(); // Fetch the most recent data
+                  location.reload();  // 刷新页面
+                } else {
+                  // 提交失败，处理错误信息，例如显示错误提示
+                  alert('信息删除失败！');
+                }
+
+              })
+              .catch((error) => {
+                console.error('Error:', error);
+              });
+    }
+
+
+
+
+    // 在current page变量后面添加一个用于显示当前页面的元素
+    var currentPage = 0;
+    var currentPageIndicator;
+
+    function updatePageIndicator() {
+      // calculate total page count
+      var totalPage = Math.ceil(clients.length / perPage);
+      currentPageIndicator.innerText = (currentPage + 1) + ' / ' + totalPage;
+    }
+
+    function previousPage() {
+      if (currentPage > 0) {
+        currentPage--;
+        refreshTable();
+        updatePageIndicator();
+      }
+    }
+
+    function nextPage() {
+      if (currentPage < Math.ceil(clients.length / perPage) - 1) {
+        currentPage++;
+        refreshTable();
+        updatePageIndicator();
+      }
+    }
+
+    function refreshTable() {
+      var oldTable = document.querySelector('table');
+      oldTable.parentNode.removeChild(oldTable);
+
+      var table = createTable();
+      document.getElementById("clientTable").appendChild(table);
+    }
+
+
+
+
+
+
+
+
+
+    // 查找
+    function search() {
+      var rentalNo = document.getElementById("searchrentalNo").value;
+      var dateStart = document.getElementById("searchdateStart").value;
+      var timeStart = document.getElementById("searchtimeStart").value;
+      var dateReturn = document.getElementById("searchdateReturn").value;
+      var timeReturn = document.getElementById("searchtimeReturn").value;
+      var mileageBefore = document.getElementById("searchmileageBefore").value;
+      var mileageAfter = document.getElementById("searchmileageAfter").value;
+      var policyNo = document.getElementById("searchpolicyNo").value;
+      var insuranceCoverType = document.getElementById("searchinsuranceCoverType").value;
+      var insurancePremium = document.getElementById("searchinsurancePremium").value;
+      var clientNo = document.getElementById("searchclientNo").value;
+      var vehLicenseNo = document.getElementById("searchvehLicenseNo").value;
+
+      var clientsTable = document.getElementById("clientsTable");
+      var rows = clientsTable.tBodies[0].rows;
+
+      for (var i = 0; i < rows.length; i++) {
+        var row = rows[i];
+
+        // 检查表格行与搜索条件的匹配程度
+        var match = row.cells[1].innerHTML.includes(rentalNo) &&
+                row.cells[2].innerHTML.includes(dateStart) &&
+                row.cells[3].innerHTML.includes(timeStart) &&
+                row.cells[4].innerHTML.includes(dateReturn) &&
+                row.cells[5].innerHTML.includes(timeReturn) &&
+                row.cells[6].innerHTML.includes(mileageBefore) &&
+                row.cells[7].innerHTML.includes(mileageAfter) &&
+                row.cells[8].innerHTML.includes(policyNo) &&
+                row.cells[9].innerHTML.includes(insuranceCoverType) &&
+                row.cells[10].innerHTML.includes(insurancePremium) &&
+                row.cells[11].innerHTML.includes(clientNo) &&
+                row.cells[12].innerHTML.includes(vehLicenseNo) ;
+
+
+        // 根据匹配结果显示/隐藏表格行
+        if (match) {
+          row.style.display = ""; // 显示匹配行
+        } else {
+          row.style.display = "none"; // 隐藏不匹配行
+        }
+      }
+
+      // 关闭模态框
+      document.getElementById("searchModal").style.display = "none";
+    }
+
+
+    function openModal() {
+      document.getElementById('searchModal').style.display = 'block';
+    }
+
+    function cancle(){
+      var modal = document.getElementById("searchModal");
+      modal.style.display = "none";
+    }
+
+
+    // 获取模态框及其组件
+    var modal = document.getElementById("myModal");
+    var span = document.getElementsByClassName("close")[0];
+    var modalData = document.getElementById("modalData");
+
+    // 当用户点击 X 符号或点击（模态框之外的）任何地方，关闭模态框
+    span.onclick = function() {
+      modal.style.display = "none";
+    }
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+
+    function fetchViewData() {
+      fetch('https://your-backend.com/view-data', {
+        method: 'GET',
+      })
+              .then(response => response.json())
+              .then(data => {
+
+                // 创建一个表格来存储数据
+                var table = document.createElement('table');
+
+                // 在数据对象中为每个键值对创建一个表格行
+                for (var key in data) {
+                  // 创建一个表格行和两个单元格
+                  var row = document.createElement('tr');
+                  var cellKey = document.createElement('td');
+                  var cellValue = document.createElement('td');
+
+                  // 将键和值放入相应的单元格并将单元格添加到行
+                  cellKey.textContent = key;
+                  cellValue.textContent = data[key];
+                  row.appendChild(cellKey);
+                  row.appendChild(cellValue);
+
+                  // 将行添加到表格
+                  table.appendChild(row);
+                }
+
+                // 将表格放入模态框数据区域并显示模态框
+                modalData.textContent = '';       // 清除可能存在的任何旧数据
+                modalData.appendChild(table);
+                modal.style.display = 'block';
+              })
+              .catch((error) => {
+                console.error('Error:', error);
+              });
+    }
+
+
+    // 添加事件监听器，在用户点击视图按钮时调用 fetchViewData 函数
+    document.getElementById('viewButton').addEventListener('click', fetchViewData);
+
+
+
+  </script>
+
+
+</head>
+<body>
+<div class="navbar">
+  <!-- 导航栏 -->
+  <div class="user-info" onclick="openModal()">
+    <img src="imgs/touxiang.webp" alt="头像" />
+    <span>树街猫</span>
+  </div>
+  <!-- 在这里添加其他导航栏项 -->
+</div>
+
+<div class="sidebar">
+  <!-- 左侧侧边栏选项 -->
+  <a href="AllClientInfo.html" class="active">
+      <span class="icon">
+		  <img src="./imgs/kehu.png" alt="图标1" style="width: 50px;height: 50px;border-radius: 50%;" />
+	  </span>
+    客户
+  </a>
+  <a href="AllEmployeeInfo.html">
+      <span class="icon">
+		  <img src="./imgs/yuangong.png" alt="图标2" style="width: 50px;height: 50px;border-radius: 50%;" />
+	  </span>
+    员工
+  </a>
+  <a href="AllFaultReportInfo.html">
+      <span class="icon">
+		  <img src="./imgs/cuowubaobiao.png" alt="图标3" style="width: 40px;height: 40px;border-radius: 50%;" />
+	  </span>
+    错误报表
+  </a>
+  <a href="AllOutletInfo.html">
+      <span class="icon">
+		  <img src="./imgs/mendian.png" alt="图标4" style="width: 40px;height: 40px;border-radius: 50%;" />
+	  </span>
+    门店
+  </a>
+  <a href="AllRentalAgreementInfo.html">
+      <span class="icon">
+		  <img src="./imgs/zulinxieyi.png" alt="图标5" style="width: 40px;height: 40px;border-radius: 50%;" />
+	  </span>
+    租赁协议
+  </a>
+  <a href="AllVehicleInfo.html">
+      <span class="icon">
+		  <img src="./imgs/cheliang.png" alt="图标6" style="width: 40px;height: 40px;border-radius: 50%;" />
+	  </span>
+    车辆
+  </a>
+</div>
+
+<div class="content">
+  <div class="a">
+    <h2>客户信息</h2>
+    <button class="add-client-button" onclick="openAddClientModal()">添加信息</button>
+    <button class="edit-client-button" onclick="openEditClientModal()">修改信息</button>
+    <button class="delete-client-button" id="deleteButton" onclick="deleteClients()">删除信息</button>
+    <button class="open-client-button" id="openModalButton" onclick="openModal()">查询信息</button>
+    <button class="view-client-button" id="viewButton">视图窗口</button>
+  </div>
+  <!-- 添加选项1的相应内容 -->
+  <div id="clientTable"></div> <!-- 添加客户的弹窗 -->
+  <div id="addClientModal" class="modal">
+    <div class="modal-content">
+      <h2>添加 信息</h2>
+
+      <label>rentalNo: <input type="text" id="rentalNo" class="client-input" data-key="rentalNo"></label><br>
+      <label>dateStart: <input type="text" id="dateStart" class="client-input" data-key="dateStart"></label><br>
+      <label>timeStart: <input type="text" id="timeStart" class="client-input" data-key="timeStart"></label><br>
+      <label>dateReturn: <input type="text" id="dateReturn" class="client-input" data-key="dateReturn"></label><br>
+      <label>timeReturn: <input type="text" id="timeReturn" class="client-input" data-key="timeReturn"></label><br>
+      <label>mileageBefore: <input type="text" id="mileageBefore" class="client-input" data-key="mileageBefore"></label><br>
+      <label>mileageAfter: <input type="text" id="mileageAfter" class="client-input" data-key="mileageAfter"></label><br>
+      <label>policyNo: <input type="text" id="policyNo" class="client-input" data-key="policyNo"></label><br>
+      <label>insuranceCoverType: <input type="text" id="insuranceCoverType" class="client-input" data-key="insuranceCoverType"></label><br>
+      <label>insurancePremium: <input type="text" id="insurancePremium" class="client-input" data-key="insurancePremium"></label><br>
+      <label>clientNo: <input type="text" id="clientNo" class="client-input" data-key="clientNo"></label><br>
+      <label>vehLicenseNo: <input type="text" id="vehLicenseNo" class="client-input" data-key="vehLicenseNo"></label><br>
+
+      <button class="add-client-button" onclick="addClient()">add</button>
+      <button class="add-client-button" onclick="closeAddClientModal()">cancle</button>
+
+
+    </div>
+  </div>
+</div>
+
+<div id="editClientModal" class="modal">
+  <div class="modal-content">
+    <h2>修改 信息</h2>
+    <form id="editClientForm" data-rowIndex="">
+      <label for="editdateStart">dateStart:</label> <input type="text" id="editdateStart" class="client-input" data-key="dateStart"><br>
+      <label for="edittimeStart">timeStart:</label> <input type="text" id="edittimeStart" class="client-input" data-key="timeStart"><br>
+      <label for="editdateReturn">dateReturn:</label> <input type="text" id="editdateReturn" class="client-input" data-key="dateReturn"><br>
+      <label for="edittimeReturn">timeReturn:</label> <input type="text" id="edittimeReturn" class="client-input" data-key="timeReturn"><br>
+      <label for="editmileageBefore">mileageBefore:</label> <input type="text" id="editmileageBefore" class="client-input" data-key="mileageBefore"><br>
+      <label for="editmileageAfter">mileageAfter:</label> <input type="text" id="editmileageAfter" class="client-input" data-key="mileageAfter"><br>
+      <label for="editpolicyNo">policyNo:</label> <input type="text" id="editpolicyNo" class="client-input" data-key="policyNo"><br>
+      <label for="editinsuranceCoverType">insuranceCoverType:</label> <input type="text" id="editinsuranceCoverType" class="client-input" data-key="insuranceCoverType"><br>
+      <label for="editinsurancePremium">insurancePremium:</label> <input type="text" id="editinsurancePremium" class="client-input" data-key="insurancePremium"><br>
+      <label for="editclientNo">clientNo:</label> <input type="text" id="editclientNo" class="client-input" data-key="clientNo"><br>
+      <label for="editvehLicenseNo">vehLicenseNo:</label> <input type="text" id="editvehLicenseNo" class="client-input" data-key="vehLicenseNo"><br>
+
+
+      <button class="edit-client-button" type="button" onclick="saveEditedClient()">Save</button>
+      <button class="edit-client-button" type="button" onclick="closeEditClientModal()">Cancel</button>
+    </form>
+  </div>
+</div>
+
+<div class="bottom-button" style="position:fixed;bottom:0;width:100%;display:flex;justify-content:center;color:#f8f8f8;">
+  <span id="currentPageIndicator" style="position: absolute;bottom: 0; left: 200px; font-size: 20px; color:#000000;"></span>
+  <button onclick="previousPage()" style="margin-right:20px;padding:10px 20px;cursor:pointer;color:#fff;background:#007BFF;border:none;border-radius:5px;font-size:15px;">上一页</button>
+  <button onclick="nextPage()" style="padding:10px 20px;cursor:pointer;color:#fff;background:#007BFF;border:none;border-radius:5px;font-size:15px;">下一页</button>
+</div>
+
+
+<div id="searchModal" class="modal">
+  <div class="modal-content">
+    <p>请输入要查找的信息：</p>
+    rentalNo: <input type="text" id="searchrentalNo"><br>
+    dateStart: <input type="text" id="searchdateStart"><br>
+    timeStart: <input type="text" id="searchtimeStart"><br>
+    dateReturn: <input type="text" id="searchdateReturn"><br>
+    timeReturn: <input type="text" id="searchtimeReturn"><br>
+    mileageBefore: <input type="text" id="searchmileageBefore"><br>
+    mileageAfter: <input type="text" id="searchmileageAfter"><br>
+    policyNo: <input type="text" id="searchpolicyNo"><br>
+    insuranceCoverType: <input type="text" id="searchinsuranceCoverType"><br>
+    insurancePremium: <input type="text" id="searchinsurancePremium"><br>
+    clientNo: <input type="text" id="searchclientNo"><br>
+    vehLicenseNo: <input type="text" id="searchvehLicenseNo"><br>
+
+
+    <button onclick="search()">查找</button>
+    <button onclick="cancle()">取消</button>
+  </div>
+</div>
+
+<div id="searchResults"></div>
+
+<!-- 模态框结构 -->
+<div id="myModal" class="modal">
+  <!-- 模态框内容 -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <p id="modalData">No data</p>  <!-- 这里是我们将显示数据的地方 -->
+  </div>
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.whut.mapper.ClientMapper">
+
+    <delete id = "deleteClientByIds">
+        delete from Client where clientNo in
+        <foreach collection="ids" item = "clientNo" separator="," open="(" close=")">
+            #{clientNo}
+        </foreach>
+    </delete>
+
+    <update id = "updateClient" parameterType="Client">
+        UPDATE Client
+        SET
+            clientName = #{clientName},
+            clientStreet = #{clientStreet},
+            clientCity = #{clientCity},
+            clientState = #{clientState},
+            clientZipCode = #{clientZipCode},
+            clientTelNo = #{clientTelNo},
+            clientFaxNo = #{clientFaxNo},
+            clientWebAddress = #{clientWebAddress},
+            contactName = #{contactName},
+            contactTelNo = #{contactTelNo},
+            contactFaxNo = #{contactFaxNo},
+            contactEmailAddress = #{contactEmailAddress}
+        WHERE clientNo = #{clientNo}
+    </update>
+
+    <insert id="addClient" parameterType="client">
+        INSERT INTO Client
+        VALUES (
+                   #{clientNo}, #{clientName}, #{clientStreet}, #{clientCity}, #{clientState}, #{clientZipCode},
+                   #{clientTelNo}, #{clientFaxNo}, #{clientWebAddress},
+                   #{contactName}, #{contactTelNo}, #{contactFaxNo}, #{contactEmailAddress}
+               )
+    </insert>
+
+    <select id="selectClientByPageAndCondition" resultType="Client">
+        SELECT *
+        FROM Client
+        <where>
+            <if test="client.clientNo != null and client.clientNo != ''">
+                AND clientNo = #{client.clientNo}
+            </if>
+
+            <if test="client.clientName != null and client.clientName != ''">
+                AND clientName like #{client.clientName}
+            </if>
+
+            <if test="client.clientStreet != null and client.clientStreet != ''">
+                AND clientStreet like #{client.clientStreet}
+            </if>
+
+            <if test="client.clientCity != null and client.clientCity != ''">
+                AND clientCity like #{client.clientCity}
+            </if>
+
+            <if test="client.clientState != null and client.clientState != ''">
+                AND clientState like #{client.clientState}
+            </if>
+
+        </where>
+
+        LIMIT #{begin}, #{size}
+    </select>
+
+    <select id="selectClientCountByCondition" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM Client
+        <where>
+            <if test="clientNo != null and clientNo != ''">
+                AND clientNo = #{clientNo}
+            </if>
+
+            <if test="clientName != null and clientName != ''">
+                AND clientName like #{clientName}
+            </if>
+
+            <if test="clientStreet != null and clientStreet != ''">
+                AND clientStreet like #{clientStreet}
+            </if>
+
+            <if test="clientCity != null and clientCity != ''">
+                AND clientCity like #{clientCity}
+            </if>
+
+            <if test="clientState != null and clientState != ''">
+                AND clientState like #{clientState}
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

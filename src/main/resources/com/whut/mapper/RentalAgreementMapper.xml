@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.whut.mapper.RentalAgreementMapper">
+
+    <delete id="deleteRentalAgreementByIds">
+        delete from RentalAgreement where rentalNo in 
+        <foreach collection="ids" item="rentalNo" separator="," open="(" close=")">
+            #{rentalNo}
+        </foreach>
+    </delete>
+    
+    <update id="updateRentalAgreement" parameterType="RentalAgreement">
+        UPDATE RentalAgreement
+        SET
+            dateStart = #{dateStart},
+            timeStart = #{timeStart},
+            dateReturn = #{dateReturn},
+            timeReturn = #{timeReturn},
+            mileageBefore = #{mileageBefore},
+            mileageAfter = #{mileageAfter},
+            policyNo = #{policyNo},
+            insuranceCoverType = #{insuranceCoverType},
+            insurancePremium = #{insurancePremium},
+            clientNo = #{clientNo},
+            vehLicenseNo = #{vehLicenseNo}
+        WHERE rentalNo = #{rentalNo}
+    </update>
+
+    <insert id="addRentalAgreement" parameterType="RentalAgreement">
+        INSERT INTO RentalAgreement (
+            dateStart, timeStart, dateReturn, timeReturn,
+            mileageBefore, mileageAfter, policyNo, insuranceCoverType, insurancePremium,
+            clientNo, vehLicenseNo
+        )
+        VALUES (
+                   #{dateStart}, #{timeStart}, #{dateReturn}, #{timeReturn},
+                   #{mileageBefore}, #{mileageAfter}, #{policyNo}, #{insuranceCoverType}, #{insurancePremium},
+                   #{clientNo}, #{vehLicenseNo}
+               )
+    </insert>
+
+    <!-- selectRentalAgreementByPageAndCondition -->
+    <select id="selectRentalAgreementByPageAndCondition" resultType="RentalAgreement">
+        SELECT *
+        FROM RentalAgreement
+        <where>
+            <if test="rentalAgreement.rentalNo != null and rentalAgreement.rentalNo != ''">
+                AND rentalNo = #{rentalAgreement.rentalNo}
+            </if>
+
+            <if test="rentalAgreement.dateStart != null and rentalAgreement.dateStart != ''">
+                AND dateStart >= #{rentalAgreement.dateStart}
+            </if>
+
+            <if test="rentalAgreement.policyNo != null and rentalAgreement.policyNo != ''">
+                AND policyNo = #{rentalAgreement.policyNo}
+            </if>
+
+            <if test="rentalAgreement.insuranceCoverType != null and rentalAgreement.insuranceCoverType != ''">
+                AND insuranceCoverType = #{rentalAgreement.insuranceCoverType}
+            </if>
+
+            <if test="rentalAgreement.insurancePremium != null and rentalAgreement.insurancePremium != '' ">
+                AND insurancePremium >= #{rentalAgreement.insurancePremium}
+            </if>
+
+            <if test="rentalAgreement.clientNo != null and rentalAgreement.clientNo != ''">
+                AND clientNo = #{rentalAgreement.clientNo}
+            </if>
+
+            <if test="rentalAgreement.vehLicenseNo != null and rentalAgreement.vehLicenseNo != ''">
+                AND vehLicenseNo = #{rentalAgreement.vehLicenseNo}
+            </if>
+        </where>
+        LIMIT #{begin}, #{size}
+    </select>
+
+    <!-- selectRentalAgreementCountByCondition -->
+    <select id="selectRentalAgreementCountByCondition" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM RentalAgreement
+        <where>
+            <if test="rentalNo != null and rentalNo != ''">
+                AND rentalNo = #{rentalNo}
+            </if>
+
+            <if test="dateStart != null and dateStart != ''">
+                AND dateStart >= #{dateStart}
+            </if>
+
+            <if test="policyNo != null and policyNo != ''">
+                AND policyNo = #{policyNo}
+            </if>
+
+            <if test="insuranceCoverType != null and insuranceCoverType != ''">
+                AND insuranceCoverType = #{insuranceCoverType}
+            </if>
+
+            <if test="insurancePremium != null and insurancePremium != '' ">
+                AND #{insurancePremium} >= insurancePremium
+            </if>
+
+            <if test="clientNo != null and clientNo != ''">
+                AND clientNo = #{clientNo}
+            </if>
+
+            <if test="vehLicenseNo != null and vehLicenseNo != ''">
+                AND vehLicenseNo = #{vehLicenseNo}
+            </if>
+        </where>
+    </select>
+
+</mapper>

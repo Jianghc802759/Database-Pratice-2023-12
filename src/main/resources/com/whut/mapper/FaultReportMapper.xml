@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.whut.mapper.FaultReportMapper">
+
+    <delete id="deleteFaultReportByIds">
+        delete from FaultReport where vehLicenseNo in
+        <foreach collection="ids" item="vehLicenseNo" separator="," open="(" close=")">
+            #{vehLicenseNo}
+        </foreach>
+    </delete>
+
+    <update id = "updateFaultReport" parameterType="FaultReport">
+        UPDATE FaultReport
+        SET
+            dateChecked = #{dateChecked},
+            timeChecked = #{timeChecked},
+            comments = #{comments},
+            employeeNo = #{employeeNo}
+        WHERE vehLicenseNo = #{vehLicenseNo}
+    </update>
+
+    <insert id="addFaultReport" parameterType="FaultReport">
+        INSERT INTO FaultReport (
+            vehLicenseNo, dateChecked, timeChecked, comments, employeeNo
+        )
+        VALUES (
+                   #{vehLicenseNo}, #{dateChecked}, #{timeChecked}, #{comments}, #{employeeNo}
+               )
+    </insert>
+
+    <select id="selectFaultReportByPageAndCondition" resultType="FaultReport">
+        select * from FaultReport
+        <where>
+            <if test="FaultReport.vehLicenseNo != null and FaultReport.vehLicenseNo != ''">
+                and vehLicenseNo = #{FaultReport.vehLicenseNo}
+            </if>
+            <if test="FaultReport.employeeNo != null and FaultReport.employeeNo != '' ">
+                and employeeNo = #{FaultReport.employeeNo}
+            </if>
+        </where>
+
+        limit #{begin}, #{size}
+
+    </select>
+
+    <select id="selectFaultReportCountByCondition" resultType="java.lang.Integer">
+        select count(*) from FaultReport
+        <where>
+            <if test="vehLicenseNo != null and vehLicenseNo != ''">
+                and vehLicenseNo = #{vehLicenseNo}
+            </if>
+            <if test="employeeNo != null and employeeNo != '' ">
+                and employeeNo = #{employeeNo}
+            </if>
+        </where>
+    </select>
+</mapper>

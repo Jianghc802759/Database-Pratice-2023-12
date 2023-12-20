@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>数据库后端界面</title>
+  <link rel="stylesheet" type="text/css" href="css/AllClientInfo.css">
+  <style>
+    body {
+      background-image: url("imgs/beijing.jpg");
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center center;
+    }
+    .modal {
+      display: none; /* 默认隐藏模态框 */
+      /* 您可以根据需要进行其他样式设置，例如定位、背景色、尺寸等 */
+    }
+
+    /* 扩展样式：使模态框居中对齐 */
+    .modal-content {
+      margin: auto;
+      width: 50%;
+      border: 1px solid #888;
+      padding: 20px;
+    }
+
+    .close {
+      cursor: pointer;
+    }
+  </style>
+  <script >
+    var perPage = 10; //每页显示的项数
+    var currentPage = 0; //当前页码开始于0
+
+    window.addEventListener('DOMContentLoaded', (event) => {
+      var options = document.querySelectorAll('.sidebar a');
+
+      // 获取之前保存的选项索引
+      var selectedOptionIndex = localStorage.getItem('selectedOptionIndex');
+
+      options.forEach(function(option, index) {
+        option.addEventListener('click', function() {
+          // 更新选项的活动状态
+          setActiveOption(index);
+        });
+
+        // 根据之前保存的选项索引设置活动状态
+        if (index.toString() === selectedOptionIndex) {
+          setActiveOption(index);
+        }
+      });
+
+      function setActiveOption(index) {
+        // 移除之前保存的活动状态
+        var activeOption = document.querySelector('.sidebar a.active');
+        if (activeOption) {
+          activeOption.classList.remove('active');
+        }
+
+        // 添加点击选中的选项的活动状态
+        options[index].classList.add('active');
+
+        // 保存选项索引到localStorage
+        localStorage.setItem('selectedOptionIndex', index.toString());
+      }
+    });
+
+    function fetchData() {
+      fetch('/CarsRental/employee/selectAllEmployee')
+              .then(response => response.json())
+              .then(data => {
+                clients = data;  // 假设API返回的数据是一个对象数组
+
+                var tableArea = document.getElementById("clientTable");
+
+                // 清除在插入新表格之前的任何存在的子元素
+                while (tableArea.firstChild) {
+                  tableArea.removeChild(tableArea.firstChild);
+                }
+
+                var registerForm = createTable();  // 加载新的表格
+
+                tableArea.appendChild(registerForm);
+
+                refreshTable();
+              })
+              .catch(error => console.error('Error:', error));
+    }
+
+
+
+    function createTable() {
+      var table = document.createElement("table");
+      var start = currentPage * perPage;
+      var end = start + perPage;
+      var clientSubset = clients.slice(start, end);
+      table.className = "client-table";
+      table.id = "clientsTable";
+
+      var thead = document.createElement("thead");
+      var headerRow = document.createElement("tr");
+
+      var headers = [
+        "employeeNo",
+        "title",
+        "firstName",
+        "middleName",
+        "lastName",
+        "address",
+        "workTelExt",
+        "homeTelNo",
+        "empEmailAddress",
+        "socialSecurityNumber",
+        "dOB",
+        "position",
+        "gender",
+        "salary",
+        "dateStarted",
+        "outletNo"
+      ];
+
+      headers.unshift("Select");
+
+      headers.forEach(function(header) {
+        var th = document.createElement("th");
+        th.textContent = header;
+        headerRow.appendChild(th);
+      });
+
+      thead.appendChild(headerRow);
+      table.appendChild(thead);
+
+      var tbody = document.createElement("tbody");
+
+      clientSubset.forEach(function(client) {
+        var row = document.createElement("tr");
+
+        var checkboxCell = document.createElement("td");
+        var checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.addEventListener('change', function () {
+          client["Select"] = this.checked ? "selected" : "";
+        });
+        checkboxCell.appendChild(checkbox);
+
+        var dataCells = headers.slice(1).map(function(header) {  // Skip the "Select" header
+          var cell = document.createElement("td");
+          cell.textContent = client[header];  // Use header name to get corresponding value from client
+          return cell;
+        });
+
+        dataCells.unshift(checkboxCell);
+
+        dataCells.forEach(function(cell) {
+          row.appendChild(cell);
+        });
+
+        tbody.appendChild(row);
+      });
+
+      table.appendChild(tbody);
+
+      return table;
+    }
+
+
+
+    function openAddClientModal() {
+      var modal = document.getElementById("addClientModal");
+      modal.style.display = "block";
+    }
+
+    function closeAddClientModal() {
+      var modal = document.getElementById("addClientModal");
+      modal.style.display = "none";
+    }
+
+    function addClient() {
+      var conditions = [
+        "employeeNo",
+        "title",
+        "firstName",
+        "middleName",
+        "lastName",
+        "address",
+        "workTelExt",
+        "homeTelNo",
+        "empEmailAddress",
+        "socialSecurityNumber",
+        "dOB",
+        "position",
+        "gender",
+        "salary",
+        "dateStarted",
+        "outletNo"
+      ];
+
+
+      var inputs = document.getElementsByClassName("client-input");
+      var client = {};
+      for (var i = 0; i < conditions.length; i++) {
+        client[conditions[i]] = inputs[i].value;
+      }
+
+      fetch('/CarsRental/employee/addEmployee', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(client),
+      })
+              .then(response => {
+                if (!response.ok) {
+                  throw new Error("HTTP error " + response.status);
+                }
+                return response.text().then(function(text) {
+                  return text ? JSON.parse(text) : {}
+                })
+              })
+              .then(data => {
+                if (data.success) {
+                  // 提交成功，可以跳转到其他页面或者显示成功信息
+                  alert('信息添加成功！');
+                  var clientTableDiv = document.getElementById("clientTable");
+                  clientTableDiv.innerHTML = "";
+                  var clientTable = createTable();
+                  clientTableDiv.appendChild(clientTable);
+                  refreshTable()
+                  location.reload();  // 刷新页面
+                } else {
+                  // 提交失败，处理错误信息，例如显示错误提示
+                  alert('信息添加失败！');
+                  closeAddClientModal();
+                }
+
+
+              })
+              .catch((error) => {
+                console.error('Error:', error);
+              });
+
+    }
+
+    var clients = [];
+
+
+
+    window.addEventListener('DOMContentLoaded', function() {
+      currentPageIndicator = document.getElementById("currentPageIndicator");
+
+      fetchData();  // 这个函数会创建表格并加入到页面中
+
+      updatePageIndicator();
+    });
+
+
+    // 处理行的点击事件，选择行并更新弹窗数据
+    function handleRowClick(event) {
+      var row = event.target.parentElement;
+      selectRow(row);
+
+      if (row.classList.contains("selected")) {
+        openEditClientModal(row);
+      } else {
+        closeEditClientModal();
+      }
+    }
+
+    // 为表格的每一行添加点击事件监听器
+    var tableRows = document.querySelectorAll("#clientTable tbody tr");
+    for (var i = 0; i < tableRows.length; i++) {
+      tableRows[i].addEventListener("click", handleRowClick);
+    }
+
+    // 选中行的处理函数
+    function selectRow(row) {
+      row.classList.toggle("selected");
+    }
+
+    function openEditClientModal() {
+      var checkboxes = document.querySelectorAll('.client-table input[type="checkbox"]');
+      var selectedRow = null;
+      for (var i = 0; i < checkboxes.length; i++) {
+        if (checkboxes[i].checked) {
+          selectedRow = checkboxes[i].parentNode.parentNode;
+          break;
+        }
+      }
+
+      if (selectedRow === null) {
+        alert('请先选择一行进行编辑');
+        return;
+      }
+
+      var modal = document.getElementById("editClientModal");
+      modal.style.display = "block";
+
+      // 获取选中行的数据
+      var rowData = [];
+      var tableCells = selectedRow.getElementsByTagName("td");
+      for (var i = 1; i < tableCells.length; i++) { // 从 1 开始，跳过复选框单元格
+        rowData.push(tableCells[i].textContent);
+      }
+      console.log(rowData)
+      // 在弹窗中填充选中行的数据
+      var editForm = document.getElementById("editClientForm");
+      var inputFields = editForm.getElementsByClassName("client-input");
+      for (var j = 0; j < inputFields.length; j++) {
+        inputFields[j].value = rowData[j+1];
+      }
+      // 在保存数据到编辑模态窗口的时候
+      editForm.dataset.employeeNo = rowData[0]; // rowData[0] 是当前行的 clientNo
+
+      // 设置当前行的索引作为属性，方便保存时更新相应的表格行
+      editForm.setAttribute("data-rowIndex", selectedRow.rowIndex - 1);
+    }
+
+
+    // 关闭弹窗
+    function closeEditClientModal() {
+      var modal = document.getElementById("editClientModal");
+      modal.style.display = "none";
+    }
+
+    // 保存修改
+    function saveEditedClient() {
+      // 从编辑表单中获取数据
+      var editForm = document.getElementById("editClientForm");
+      var inputFields = editForm.getElementsByClassName("client-input");
+
+      var rowData = [];
+      var client = {};
+
+      // 在保存编辑后信息给服务器的时候
+      client.employeeNo = editForm.dataset.employeeNo; // 获取保存在编辑模态窗口内的 employeeNo
+
+
+      for(var i = 1; i < inputFields.length; i++) {
+        rowData.push(inputFields[i].value);
+      }
+
+
+      // 我假设每个 "inputFields" 对应的名称 (name) 是和 "conditions" 里的一样
+      var conditions = [
+        "title",
+        "firstName",
+        "middleName",
+        "lastName",
+        "address",
+        "workTelExt",
+        "homeTelNo",
+        "empEmailAddress",
+        "socialSecurityNumber",
+        "dOB",
+        "position",
+        "gender",
+        "salary",
+        "dateStarted",
+        "outletNo"
+      ];
+
+      for (var i = 0; i < conditions.length; i++) {
+        client[conditions[i]] = inputFields[i].value;
+      }
+      // 假设 'data-rowIndex' 属性保存了惟一的客户ID
+      var clientId = editForm.getAttribute('data-rowIndex');
+
+      fetch(`/CarsRental/employee/updateEmployee`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(client),
+      })
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.success) {
+                  // 提交成功，可以跳转到其他页面或者显示成功信息
+                  alert('信息修改成功！');
+                  location.reload();  // 刷新页面
+                } else {
+                  // 提交失败，处理错误信息，例如显示错误提示
+                  alert('信息修改失败！');
+                  closeEditClientModal();
+                }
+
+
+              })
+              .catch((error) => {
+                console.error('Error:', error);
+              });
+    }
+
+
+    // 删除信息
+    function deleteClients() {
+      var checkboxes = document.querySelectorAll('.client-table input[type="checkbox"]');
+
+      // 创建一个数组用于保存所有选择的客户的完整信息
+      var clientsToDelete = [];
+
+      checkboxes.forEach((checkbox, index) => {
+        if (checkbox.checked) {
+          var row = checkbox.parentNode.parentNode;
+          clientsToDelete.push(row.children[1].textContent);
+        }
+      });
+
+      // 使用 JSON.stringify 将对象数组转换为 JSON 字符串
+      var requestBody = JSON.stringify(clientsToDelete);
+
+      fetch(`/CarsRental/employee/deleteEmployeeByIds`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: requestBody,
+      })
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.success) {
+                  // 提交成功，可以跳转到其他页面或者显示成功信息
+                  alert('信息删除成功！');
+                  checkboxes.forEach((checkbox) => {
+                    if (checkbox.checked) {
+                      checkbox.parentNode.parentNode.remove();
+                    }
+                  });
+                  refreshTable(); // Fetch the most recent data
+                  location.reload();  // 刷新页面
+                } else {
+                  // 提交失败，处理错误信息，例如显示错误提示
+                  alert('信息删除失败！');
+                }
+
+              })
+              .catch((error) => {
+                console.error('Error:', error);
+              });
+    }
+
+
+
+
+    // 在current page变量后面添加一个用于显示当前页面的元素
+    var currentPage = 0;
+    var currentPageIndicator;
+
+    function updatePageIndicator() {
+      // calculate total page count
+      var totalPage = Math.ceil(clients.length / perPage);
+      currentPageIndicator.innerText = (currentPage + 1) + ' / ' + totalPage;
+    }
+
+    function previousPage() {
+      if (currentPage > 0) {
+        currentPage--;
+        refreshTable();
+        updatePageIndicator();
+      }
+    }
+
+    function nextPage() {
+      if (currentPage < Math.ceil(clients.length / perPage) - 1) {
+        currentPage++;
+        refreshTable();
+        updatePageIndicator();
+      }
+    }
+
+    function refreshTable() {
+      var oldTable = document.querySelector('table');
+      oldTable.parentNode.removeChild(oldTable);
+
+      var table = createTable();
+      document.getElementById("clientTable").appendChild(table);
+    }
+
+
+
+
+
+
+
+
+
+    // 查找
+    function search() {
+      var employeeNo = document.getElementById("searchemployeeNo").value;
+      var title = document.getElementById("searchtitle").value;
+      var firstName = document.getElementById("searchfirstName").value;
+      var middleName = document.getElementById("searchmiddleName").value;
+      var lastName = document.getElementById("searchlastName").value;
+      var address = document.getElementById("searchaddress").value;
+      var workTelExt = document.getElementById("searchworkTelExt").value;
+      var homeTelNo = document.getElementById("searchhomeTelNo").value;
+      var empEmailAddress = document.getElementById("searchempEmailAddress").value;
+      var socialSecurityNumber = document.getElementById("searchsocialSecurityNumber").value;
+      var dOB = document.getElementById("searchdOB").value;
+      var position = document.getElementById("searchposition").value;
+      var gender = document.getElementById("searchgender").value;
+      var salary = document.getElementById("searchsalary").value;
+      var dateStarted = document.getElementById("searchdateStarted").value;
+      var outletNo = document.getElementById("searchoutletNo").value;
+
+
+      var clientsTable = document.getElementById("clientsTable");
+      var rows = clientsTable.tBodies[0].rows;
+
+      for (var i = 0; i < rows.length; i++) {
+        var row = rows[i];
+
+        // 检查表格行与搜索条件的匹配程度
+        var match = row.cells[1].innerHTML.includes(employeeNo) &&
+                row.cells[2].innerHTML.includes(title) &&
+                row.cells[3].innerHTML.includes(firstName) &&
+                row.cells[4].innerHTML.includes(middleName) &&
+                row.cells[5].innerHTML.includes(lastName) &&
+                row.cells[6].innerHTML.includes(address) &&
+                row.cells[7].innerHTML.includes(workTelExt) &&
+                row.cells[8].innerHTML.includes(homeTelNo) &&
+                row.cells[9].innerHTML.includes(empEmailAddress) &&
+                row.cells[10].innerHTML.includes(socialSecurityNumber) &&
+                row.cells[11].innerHTML.includes(dOB) &&
+                row.cells[12].innerHTML.includes(position) &&
+                row.cells[13].innerHTML.includes(gender) &&
+                row.cells[14].innerHTML.includes(salary) &&
+                row.cells[15].innerHTML.includes(dateStarted) &&
+                row.cells[16].innerHTML.includes(outletNo) ;
+
+        // 根据匹配结果显示/隐藏表格行
+        if (match) {
+          row.style.display = ""; // 显示匹配行
+        } else {
+          row.style.display = "none"; // 隐藏不匹配行
+        }
+      }
+
+      // 关闭模态框
+      document.getElementById("searchModal").style.display = "none";
+    }
+
+
+    function openModal() {
+      document.getElementById('searchModal').style.display = 'block';
+    }
+
+    function cancle(){
+      var modal = document.getElementById("searchModal");
+      modal.style.display = "none";
+    }
+
+
+    // 获取模态框及其组件
+    var modal = document.getElementById("myModal");
+    var span = document.getElementsByClassName("close")[0];
+    var modalData = document.getElementById("modalData");
+
+    // 当用户点击 X 符号或点击（模态框之外的）任何地方，关闭模态框
+    span.onclick = function() {
+      modal.style.display = "none";
+    }
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+
+    function fetchViewData() {
+      fetch('https://your-backend.com/view-data', {
+        method: 'GET',
+      })
+              .then(response => response.json())
+              .then(data => {
+
+                // 创建一个表格来存储数据
+                var table = document.createElement('table');
+
+                // 在数据对象中为每个键值对创建一个表格行
+                for (var key in data) {
+                  // 创建一个表格行和两个单元格
+                  var row = document.createElement('tr');
+                  var cellKey = document.createElement('td');
+                  var cellValue = document.createElement('td');
+
+                  // 将键和值放入相应的单元格并将单元格添加到行
+                  cellKey.textContent = key;
+                  cellValue.textContent = data[key];
+                  row.appendChild(cellKey);
+                  row.appendChild(cellValue);
+
+                  // 将行添加到表格
+                  table.appendChild(row);
+                }
+
+                // 将表格放入模态框数据区域并显示模态框
+                modalData.textContent = '';       // 清除可能存在的任何旧数据
+                modalData.appendChild(table);
+                modal.style.display = 'block';
+              })
+              .catch((error) => {
+                console.error('Error:', error);
+              });
+    }
+
+
+    // 添加事件监听器，在用户点击视图按钮时调用 fetchViewData 函数
+    document.getElementById('viewButton').addEventListener('click', fetchViewData);
+
+
+
+  </script>
+
+
+</head>
+<body>
+<div class="navbar">
+  <!-- 导航栏 -->
+  <div class="user-info" onclick="openModal()">
+    <img src="imgs/touxiang.webp" alt="头像" />
+    <span>树街猫</span>
+  </div>
+  <!-- 在这里添加其他导航栏项 -->
+</div>
+
+<div class="sidebar">
+  <!-- 左侧侧边栏选项 -->
+  <a href="AllClientInfo.html" class="active">
+      <span class="icon">
+		  <img src="./imgs/kehu.png" alt="图标1" style="width: 50px;height: 50px;border-radius: 50%;" />
+	  </span>
+    客户
+  </a>
+  <a href="AllEmployeeInfo.html">
+      <span class="icon">
+		  <img src="./imgs/yuangong.png" alt="图标2" style="width: 50px;height: 50px;border-radius: 50%;" />
+	  </span>
+    员工
+  </a>
+  <a href="AllFaultReportInfo.html">
+      <span class="icon">
+		  <img src="./imgs/cuowubaobiao.png" alt="图标3" style="width: 40px;height: 40px;border-radius: 50%;" />
+	  </span>
+    错误报表
+  </a>
+  <a href="AllOutletInfo.html">
+      <span class="icon">
+		  <img src="./imgs/mendian.png" alt="图标4" style="width: 40px;height: 40px;border-radius: 50%;" />
+	  </span>
+    门店
+  </a>
+  <a href="AllRentalAgreementInfo.html">
+      <span class="icon">
+		  <img src="./imgs/zulinxieyi.png" alt="图标5" style="width: 40px;height: 40px;border-radius: 50%;" />
+	  </span>
+    租赁协议
+  </a>
+  <a href="AllVehicleInfo.html">
+      <span class="icon">
+		  <img src="./imgs/cheliang.png" alt="图标6" style="width: 40px;height: 40px;border-radius: 50%;" />
+	  </span>
+    车辆
+  </a>
+</div>
+
+<div class="content">
+  <div class="a">
+    <h2>客户信息</h2>
+    <button class="add-client-button" onclick="openAddClientModal()">添加信息</button>
+    <button class="edit-client-button" onclick="openEditClientModal()">修改信息</button>
+    <button class="delete-client-button" id="deleteButton" onclick="deleteClients()">删除信息</button>
+    <button class="open-client-button" id="openModalButton" onclick="openModal()">查询信息</button>
+    <button class="view-client-button" id="viewButton">视图窗口</button>
+  </div>
+  <!-- 添加选项1的相应内容 -->
+  <div id="clientTable"></div> <!-- 添加客户的弹窗 -->
+  <div id="addClientModal" class="modal">
+    <div class="modal-content">
+      <h2>添加 信息</h2>
+
+      <label>employeeNo: <input type="text" id="employeeNo" class="client-input" data-key="employeeNo"></label><br>
+      <label>title: <input type="text" id="title" class="client-input" data-key="title"></label><br>
+      <label>firstName: <input type="text" id="firstName" class="client-input" data-key="firstName"></label><br>
+      <label>middleName: <input type="text" id="middleName" class="client-input" data-key="middleName"></label><br>
+      <label>lastName: <input type="text" id="lastName" class="client-input" data-key="lastName"></label><br>
+      <label>address: <input type="text" id="address" class="client-input" data-key="address"></label><br>
+      <label>workTelExt: <input type="text" id="workTelExt" class="client-input" data-key="workTelExt"></label><br>
+      <label>homeTelNo: <input type="text" id="homeTelNo" class="client-input" data-key="homeTelNo"></label><br>
+      <label>empEmailAddress: <input type="text" id="empEmailAddress" class="client-input" data-key="empEmailAddress"></label><br>
+      <label>socialSecurityNumber: <input type="text" id="socialSecurityNumber" class="client-input" data-key="socialSecurityNumber"></label><br>
+      <label>dOB: <input type="text" id="dOB" class="client-input" data-key="dOB"></label><br>
+      <label>position: <input type="text" id="position" class="client-input" data-key="position"></label><br>
+      <label>gender: <input type="text" id="gender" class="client-input" data-key="gender"></label><br>
+      <label>salary: <input type="text" id="salary" class="client-input" data-key="salary"></label><br>
+      <label>dateStarted: <input type="text" id="dateStarted" class="client-input" data-key="dateStarted"></label><br>
+      <label>outletNo: <input type="text" id="outletNo" class="client-input" data-key="outletNo"></label><br>
+
+      <button class="add-client-button" onclick="addClient()">add</button>
+      <button class="add-client-button" onclick="closeAddClientModal()">cancle</button>
+
+
+    </div>
+  </div>
+</div>
+
+<div id="editClientModal" class="modal">
+  <div class="modal-content">
+    <h2>修改 信息</h2>
+    <form id="editClientForm" data-rowIndex="">
+      <label for="edittitle">title:</label> <input type="text" id="edittitle" class="client-input" data-key="title"><br>
+      <label for="editfirstName">firstName:</label> <input type="text" id="editfirstName" class="client-input" data-key="firstName"><br>
+      <label for="editmiddleName">middleName:</label> <input type="text" id="editmiddleName" class="client-input" data-key="middleName"><br>
+      <label for="editlastName">lastName:</label> <input type="text" id="editlastName" class="client-input" data-key="lastName"><br>
+      <label for="editaddress">address:</label> <input type="text" id="editaddress" class="client-input" data-key="address"><br>
+      <label for="editworkTelExt">workTelExt:</label> <input type="text" id="editworkTelExt" class="client-input" data-key="workTelExt"><br>
+      <label for="edithomeTelNo">homeTelNo:</label> <input type="text" id="edithomeTelNo" class="client-input" data-key="homeTelNo"><br>
+      <label for="editempEmailAddress">empEmailAddress:</label> <input type="text" id="editempEmailAddress" class="client-input" data-key="empEmailAddress"><br>
+      <label for="editsocialSecurityNumber">socialSecurityNumber:</label> <input type="text" id="editsocialSecurityNumber" class="client-input" data-key="socialSecurityNumber"><br>
+      <label for="editdOB">dOB:</label> <input type="text" id="editdOB" class="client-input" data-key="dOB"><br>
+      <label for="editposition">position:</label> <input type="text" id="editposition" class="client-input" data-key="position"><br>
+      <label for="editgender">gender:</label> <input type="text" id="editgender" class="client-input" data-key="gender"><br>
+      <label for="editsalary">salary:</label> <input type="text" id="editsalary" class="client-input" data-key="salary"><br>
+      <label for="editdateStarted">dateStarted:</label> <input type="text" id="editdateStarted" class="client-input" data-key="dateStarted"><br>
+      <label for="editoutletNo">outletNo:</label> <input type="text" id="editoutletNo" class="client-input" data-key="outletNo"><br>
+
+
+      <button class="edit-client-button" type="button" onclick="saveEditedClient()">Save</button>
+      <button class="edit-client-button" type="button" onclick="closeEditClientModal()">Cancel</button>
+    </form>
+  </div>
+</div>
+
+<div class="bottom-button" style="position:fixed;bottom:0;width:100%;display:flex;justify-content:center;color:#f8f8f8;">
+  <span id="currentPageIndicator" style="position: absolute;bottom: 0; left: 200px; font-size: 20px; color:#000000;"></span>
+  <button onclick="previousPage()" style="margin-right:20px;padding:10px 20px;cursor:pointer;color:#fff;background:#007BFF;border:none;border-radius:5px;font-size:15px;">上一页</button>
+  <button onclick="nextPage()" style="padding:10px 20px;cursor:pointer;color:#fff;background:#007BFF;border:none;border-radius:5px;font-size:15px;">下一页</button>
+</div>
+
+
+<div id="searchModal" class="modal">
+  <div class="modal-content">
+    <p>请输入要查找的信息：</p>
+    employeeNo: <input type="text" id="searchemployeeNo"><br>
+    title: <input type="text" id="searchtitle"><br>
+    firstName: <input type="text" id="searchfirstName"><br>
+    middleName: <input type="text" id="searchmiddleName"><br>
+    lastName: <input type="text" id="searchlastName"><br>
+    address: <input type="text" id="searchaddress"><br>
+    workTelExt: <input type="text" id="searchworkTelExt"><br>
+    homeTelNo: <input type="text" id="searchhomeTelNo"><br>
+    empEmailAddress: <input type="text" id="searchempEmailAddress"><br>
+    socialSecurityNumber: <input type="text" id="searchsocialSecurityNumber"><br>
+    dOB: <input type="text" id="searchdOB"><br>
+    position: <input type="text" id="searchposition"><br>
+    gender: <input type="text" id="searchgender"><br>
+    salary: <input type="text" id="searchsalary"><br>
+    dateStarted: <input type="text" id="searchdateStarted"><br>
+    outletNo: <input type="text" id="searchoutletNo"><br>
+
+    <button onclick="search()">查找</button>
+    <button onclick="cancle()">取消</button>
+  </div>
+</div>
+
+<div id="searchResults"></div>
+
+<!-- 模态框结构 -->
+<div id="myModal" class="modal">
+  <!-- 模态框内容 -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <p id="modalData">No data</p>  <!-- 这里是我们将显示数据的地方 -->
+  </div>
+</div>
+
+
+</body>
+</html>

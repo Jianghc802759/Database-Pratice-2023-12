@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.whut.mapper.VehicleMapper">
+
+    <insert id="addVehicle" parameterType="Vehicle">
+        INSERT INTO Vehicle (
+            vehLicenseNo, vehicleMake, vehicleModel, color, noDoors,
+            rentalStatus, maintenanceStatus, capacity, hireRate, outletNo
+        )
+        VALUES (
+                   #{vehLicenseNo}, #{vehicleMake}, #{vehicleModel}, #{color}, #{noDoors},
+                   #{rentalStatus}, #{maintenanceStatus}, #{capacity}, #{hireRate}, #{outletNo}
+               )
+    </insert>
+
+    <delete id="deleteVehicleByIds">
+        delete from Vehicle where vehLicenseNo in
+        <foreach collection="ids" item="vehLicenseNo" separator="," open="(" close=")">
+            #{vehLicenseNo}
+        </foreach>
+    </delete>
+
+    <update id="updateVehicle" parameterType="Vehicle">
+        UPDATE Vehicle
+        SET
+            vehicleMake = #{vehicleMake},
+            vehicleModel = #{vehicleModel},
+            color = #{color},
+            noDoors = #{noDoors},
+            rentalStatus = #{rentalStatus},
+            maintenanceStatus = #{maintenanceStatus},
+            capacity = #{capacity},
+            hireRate = #{hireRate},
+            outletNo = #{outletNo}
+        WHERE vehLicenseNo = #{vehLicenseNo}
+    </update>
+
+    <!-- selectVehicleByPageAndCondition -->
+    <select id="selectVehicleByPageAndCondition" resultType="Vehicle">
+        SELECT *
+        FROM Vehicle
+        <where>
+            <if test="vehicle.vehLicenseNo != null and vehicle.vehLicenseNo != ''">
+                AND vehLicenseNo = #{vehicle.vehLicenseNo}
+            </if>
+
+            <if test="vehicle.vehicleMake != null and vehicle.vehicleMake != ''">
+                AND vehicleMake = #{vehicle.vehicleMake}
+            </if>
+
+            <if test="vehicle.vehicleModel != null and vehicle.vehicleModel != ''">
+                AND vehicleModel = #{vehicle.vehicleModel}
+            </if>
+
+            <if test="vehicle.color != null and vehicle.color != ''">
+                AND color = #{vehicle.color}
+            </if>
+
+            <if test="vehicle.noDoors != null and vehicle.noDoors != ''">
+                AND noDoors = #{vehicle.noDoors}
+            </if>
+
+            <if test="vehicle.rentalStatus != null and vehicle.rentalStatus != ''">
+                AND rentalStatus = #{vehicle.rentalStatus}
+            </if>
+
+            <if test="vehicle.maintenanceStatus != null and vehicle.maintenanceStatus != '' ">
+                AND maintenanceStatus = #{vehicle.maintenanceStatus}
+            </if>
+
+            <if test="vehicle.capacity != null and vehicle.capacity != '' ">
+                AND capacity = #{vehicle.capacity}
+            </if>
+
+            <if test="vehicle.hireRate != null and vehicle.hireRate != '' ">
+                AND hireRate = #{vehicle.hireRate}
+            </if>
+
+            <if test="vehicle.outletNo != null and vehicle.outletNo != '' ">
+                AND outletNo = #{vehicle.outletNo}
+            </if>
+        </where>
+        LIMIT #{begin}, #{size}
+    </select>
+
+    <!-- selectVehicleCountByCondition -->
+    <select id="selectVehicleCountByCondition" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM Vehicle
+        <where>
+            <if test="vehLicenseNo != null and vehLicenseNo != ''">
+                AND vehLicenseNo = #{vehLicenseNo}
+            </if>
+
+            <if test="vehicleMake != null and vehicleMake != ''">
+                AND vehicleMake like #{vehicleMake}
+            </if>
+
+            <if test="vehicleModel != null and vehicleModel != ''">
+                AND vehicleModel like #{vehicleModel}
+            </if>
+
+            <if test="color != null and color != ''">
+                AND color = #{color}
+            </if>
+
+            <if test="noDoors != null and noDoors != '' ">
+                AND noDoors = #{noDoors}
+            </if>
+
+            <if test="rentalStatus != null and rentalStatus != ''">
+                AND rentalStatus = #{rentalStatus}
+            </if>
+
+            <if test="maintenanceStatus != null and maintenanceStatus != ''">
+                AND maintenanceStatus = #{maintenanceStatus}
+            </if>
+
+            <if test="capacity != null and capacity != '' ">
+                AND capacity = #{capacity}
+            </if>
+
+            <if test="hireRate != null and hireRate != '' ">
+                AND #{hireRate} >= hireRate
+            </if>
+
+            <if test="outletNo != null and outletNo != '' ">
+                AND outletNo = #{outletNo}
+            </if>
+        </where>
+    </select>
+
+</mapper>
