@@ -583,7 +583,7 @@
     }
 
     function fetchViewData() {
-      fetch('https://your-backend.com/view-data', {
+      fetch('/CarsRental/client/selectClientStreet', {
         method: 'GET',
       })
               .then(response => response.json())
@@ -694,7 +694,7 @@
     <div class="modal-content">
       <h2>添加 信息</h2>
 
-      <label>Client No: <input type="text" id="clientNo" class="client-input" data-key="clientNo"></label><br>
+      <label style="display: none">Client No: <input style="display: none" type="text" id="clientNo" class="client-input" data-key="clientNo"></label><br>
       <label>Client Name: <input type="text" id="clientName" class="client-input" data-key="clientName"></label><br>
       <label>Client Street: <input type="text" id="clientStreet" class="client-input" data-key="clientStreet"></label><br>
       <label>Client City: <input type="text" id="clientCity" class="client-input" data-key="clientCity"></label><br>

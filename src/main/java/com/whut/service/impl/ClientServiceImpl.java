@@ -13,6 +13,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
+import java.util.Map;
 
 public class ClientServiceImpl implements ClientService{
     SqlSessionFactory factory = SqlSessionFactoryUtils.getSqlSessionFactory();
@@ -114,6 +115,25 @@ public class ClientServiceImpl implements ClientService{
         return false;  // 更新失败
     }
 
+    /**
+     * 客户登录
+     * @param clientNo
+     * @param password
+     * @return
+     */
+    @Override
+    public boolean clientLogin(String clientNo, String password) {
+        SqlSession sqlSession = factory.openSession();
+        ClientMapper clientMapper = sqlSession.getMapper(ClientMapper.class);
+
+        Client client = clientMapper.selectClient(clientNo);
+
+        sqlSession.close();
+
+        if(client == null)return false;
+        return client.getClientTelNo().equals(password);
+    }
+
 
     /**
      * 客户查询个人信息
@@ -146,6 +166,46 @@ public class ClientServiceImpl implements ClientService{
         sqlSession.close();
 
         return clients;
+    }
+
+    /**
+     * 客户街道、城市、州的视图查询
+     * @return
+     */
+    @Override
+    public List<Map<String, String>> selectClientStreet() {
+        SqlSession sqlSession = factory.openSession();
+        ClientMapper clientMapper = sqlSession.getMapper(ClientMapper.class);
+
+        List<Map<String, String>> clientStreets = clientMapper.selectClientStreet();
+
+        sqlSession.close();
+
+        return clientStreets;
+    }
+
+    @Override
+    public List<Map<String, String>> selectClientCity() {
+        SqlSession sqlSession = factory.openSession();
+        ClientMapper clientMapper = sqlSession.getMapper(ClientMapper.class);
+
+        List<Map<String, String>> clientCitys = clientMapper.selectClientCity();
+
+        sqlSession.close();
+
+        return clientCitys;
+    }
+
+    @Override
+    public List<Map<String, String>> selectClientState() {
+        SqlSession sqlSession = factory.openSession();
+        ClientMapper clientMapper = sqlSession.getMapper(ClientMapper.class);
+
+        List<Map<String, String>> clientStates = clientMapper.selectClientState();
+
+        sqlSession.close();
+
+        return clientStates;
     }
 
     /**

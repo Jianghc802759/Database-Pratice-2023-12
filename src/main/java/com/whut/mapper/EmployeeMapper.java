@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Select;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 public interface EmployeeMapper {
     /**
@@ -22,6 +23,14 @@ public interface EmployeeMapper {
      * @param ids
      */
     void deleteEmployeeByIds(@Param("ids") String ids[]) throws SQLException;
+
+    /**
+     * 查询员工的社安码，作为密码
+     * @param employeeNo
+     * @return
+     */
+    @Select("select socialSecurityNumber from Employeewhere where employeeNo = #{employeeNo}")
+    String selectEmployeeSSN(String employeeNo);
 
     /**
      * 查询员工基本信息
@@ -99,4 +108,25 @@ public interface EmployeeMapper {
      * @return
      */
     int selectEmployeeCountByCondition(Employee employee);
+
+    /**
+     * 查询员工性别
+     * @return
+     */
+    @Select("select * from EmployeeGenderView")
+    List<Map<String,String>> selectEmployeeGender();
+
+    /**
+     * 查询员工职位
+     * @return
+     */
+    @Select("select * from EmployeePositionView")
+    List<Map<String,String>> selectEmployeePosition();
+
+    /**
+     * 查询员工工作量
+     * @return
+     */
+    @Select("select * from FaultReportToEmployee")
+    List<Map<String,String>> selectEmployeeWorkload();
 }

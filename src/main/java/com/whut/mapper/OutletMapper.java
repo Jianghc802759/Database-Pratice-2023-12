@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Select;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 public interface OutletMapper {
     /**
@@ -72,4 +73,25 @@ public interface OutletMapper {
      * @return
      */
     int selectOutletCountByCondition(Outlet outlet);
+
+    /**
+     * 查询门店州
+     * @return
+     */
+    @Select("select * from OutletStateView")
+    List<Map<String, String>> selectOutletState();
+
+    /**
+     * 查询门店城市
+     * @return
+     */
+    @Select("select * from OutletCityView")
+    List<Map<String, String>> selectOutletCity();
+
+    /**
+     * 查询门店州
+     * @return
+     */
+    @Select("select * from OutletStreetView")
+    List<Map<String, String>> selectOutletStreet();
 }

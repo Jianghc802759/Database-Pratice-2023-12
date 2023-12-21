@@ -15,6 +15,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
+import java.util.Map;
 
 public class EmployeeServiceImpl implements EmployeeService {
     SqlSessionFactory factory = SqlSessionFactoryUtils.getSqlSessionFactory();
@@ -110,6 +111,25 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     /**
+     * 员工登录
+     * @param employeeNo
+     * @param password
+     * @return
+     */
+    @Override
+    public boolean employeeLogin(String employeeNo, String password) {
+        SqlSession sqlSession = factory.openSession();
+        EmployeeMapper employeeMapper = sqlSession.getMapper(EmployeeMapper.class);
+
+        Employee employee = employeeMapper.selectEmployee(employeeNo);
+
+        sqlSession.close();
+
+        if(employee == null) return false;
+        return employee.getSocialSecurityNumber().equals(password);
+    }
+
+    /**
      * 员工查询个人信息
      * @param employeeNo
      * @return
@@ -141,6 +161,46 @@ public class EmployeeServiceImpl implements EmployeeService {
         sqlSession.close();
 
         return managerNo;
+    }
+
+    /**
+     * 查询员工的性别、职位、工作量视图
+     * @return
+     */
+    @Override
+    public List<Map<String, String>> selectEmployeeGender() {
+        SqlSession sqlSession = factory.openSession();
+        EmployeeMapper employeeMapper = sqlSession.getMapper(EmployeeMapper.class);
+
+        List<Map<String, String>> employeeGenders = employeeMapper.selectEmployeeGender();
+
+        sqlSession.close();
+
+        return employeeGenders;
+    }
+
+    @Override
+    public List<Map<String, String>> selectEmployeePosition() {
+        SqlSession sqlSession = factory.openSession();
+        EmployeeMapper employeeMapper = sqlSession.getMapper(EmployeeMapper.class);
+
+        List<Map<String, String>> employeePositions = employeeMapper.selectEmployeePosition();
+
+        sqlSession.close();
+
+        return employeePositions;
+    }
+
+    @Override
+    public List<Map<String, String>> selectEmployeeWorkload() {
+        SqlSession sqlSession = factory.openSession();
+        EmployeeMapper employeeMapper = sqlSession.getMapper(EmployeeMapper.class);
+
+        List<Map<String, String>> employeeWorkloads = employeeMapper.selectEmployeeWorkload();
+
+        sqlSession.close();
+
+        return employeeWorkloads;
     }
 
     /**

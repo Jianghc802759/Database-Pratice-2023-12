@@ -50,6 +50,14 @@ public interface VehicleMapper {
     List<Vehicle> selectVehicleByOutlet(int outletNo);
 
     /**
+     * 查询可用汽车
+     * @param outletNo
+     * @return
+     */
+    @Select("select * from Vehicle where outletNo = #{outletNo} and rentalStatus = 0 and maintenanceStatus = 0")
+    List<Vehicle> selectVehicleToClient(int outletNo);
+
+    /**
      * 分页查询汽车
      * @param begin
      * @param size
@@ -74,4 +82,24 @@ public interface VehicleMapper {
      */
     int selectVehicleCountByCondition(Vehicle vehicle);
 
+    /**
+     * 查询汽车制造商
+     * @return
+     */
+    @Select("select * from VehicleMakeView")
+    List<Map<String, String>> selectVehicleMake();
+
+    /**
+     * 查询汽车型号
+     * @return
+     */
+    @Select("select * from VehicleModelView")
+    List<Map<String, String>> selectVehicleModel();
+
+    /**
+     * 查询汽车颜色
+     * @return
+     */
+    @Select("select * from VehicleColorView")
+    List<Map<String, String>> selectVehicleColor();
 }

@@ -4,6 +4,7 @@ import com.whut.pojo.PageBean;
 import com.whut.pojo.Vehicle;
 
 import java.util.List;
+import java.util.Map;
 
 public interface VehicleService {
     /**
@@ -29,6 +30,31 @@ public interface VehicleService {
      * @return
      */
     List<Vehicle> selectAllVehicle();
+
+    /**
+     *  查询可用汽车
+     * @param outlet
+     * @return
+     */
+    List<Vehicle> selectVehicleToClient(int outlet);
+
+    /**
+     * 查询汽车制造商
+     * @return
+     */
+    List<Map<String, String>> selectVehicleMake();
+
+    /**
+     * 查询汽车型号
+     * @return
+     */
+    List<Map<String, String>> selectVehicleModel();
+
+    /**
+     * 查询汽车颜色
+     * @return
+     */
+    List<Map<String, String>> selectVehicleColor();
 
     /**
      * 经理查询门店汽车

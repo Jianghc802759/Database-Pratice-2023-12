@@ -6,6 +6,7 @@ import com.whut.pojo.Junior2SeniorTechnician;
 import com.whut.pojo.PageBean;
 
 import java.util.List;
+import java.util.Map;
 
 public interface EmployeeService {
     /**
@@ -27,6 +28,14 @@ public interface EmployeeService {
     boolean updateEmployee(Employee employee);
 
     /**
+     * 员工登录
+     * @param employeeNo
+     * @param password
+     * @return
+     */
+    boolean employeeLogin(String employeeNo, String password);
+
+    /**
      * 查询员工个人信息
      * @param employeeNo
      * @return
@@ -39,6 +48,24 @@ public interface EmployeeService {
      * @return
      */
     String selectManagerByOutlet(int outlet);
+
+    /**
+     * 查询员工性别
+     * @return
+     */
+    List<Map<String, String>> selectEmployeeGender();
+
+    /**
+     * 查询员工职位
+     * @return
+     */
+    List<Map<String, String>> selectEmployeePosition();
+
+    /**
+     * 查询员工工作量
+     * @return
+     */
+    List<Map<String, String>> selectEmployeeWorkload();
 
     /**
      * 根据经理返回所在门店的技工

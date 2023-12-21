@@ -2,10 +2,7 @@ package com.whut.servlet;
 
 import com.alibaba.fastjson.JSON;
 import com.whut.mapper.EmployeeMapper;
-import com.whut.pojo.Employee;
-import com.whut.pojo.Employee2Manager;
-import com.whut.pojo.Junior2SeniorTechnician;
-import com.whut.pojo.PageBean;
+import com.whut.pojo.*;
 import com.whut.service.EmployeeService;
 import com.whut.service.impl.EmployeeServiceImpl;
 
@@ -15,6 +12,7 @@ import javax.servlet.annotation.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet("/employee/*")
 public class EmployeeServlet extends BaseServlet {
@@ -59,6 +57,25 @@ public class EmployeeServlet extends BaseServlet {
       }
    }
 
+   public void employeeLogin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+      BufferedReader br = request.getReader();
+      String params = br.readLine();
+
+      UserInfo userInfo = JSON.parseObject(params, UserInfo.class);
+
+      String username = userInfo.getUsername();
+      String password = userInfo.getPassword();
+
+      if(employeeService.employeeLogin(username, password)){
+         HttpSession session = request.getSession();
+         session.setAttribute("employeeNo",username);
+
+         response.getWriter().write("{\"success\": true}");
+      } else{
+         response.getWriter().write("{\"success\": false}");
+      }
+   }
+
    public void selectEmployee(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
       HttpSession session = request.getSession();
       String employeeNo = (String) session.getAttribute("employeeNo");
@@ -76,7 +93,32 @@ public class EmployeeServlet extends BaseServlet {
 
       String jsonString = JSON.toJSONString(employees);
 
-      System.out.println(jsonString);
+      response.setContentType("text/json;charset=utf-8");
+      response.getWriter().write(jsonString);
+   }
+
+   public void selectEmployeeGender(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+      List<Map<String,String>> employeeGenders = employeeService.selectEmployeeGender();
+
+      String jsonString = JSON.toJSONString(employeeGenders);
+
+      response.setContentType("text/json;charset=utf-8");
+      response.getWriter().write(jsonString);
+   }
+
+   public void selectEmployeePosition(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+      List<Map<String,String>> employeePositions = employeeService.selectEmployeePosition();
+
+      String jsonString = JSON.toJSONString(employeePositions);
+
+      response.setContentType("text/json;charset=utf-8");
+      response.getWriter().write(jsonString);
+   }
+
+   public void selectEmployeeWorkload(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+      List<Map<String,String>> employeeWorkloads = employeeService.selectEmployeeWorkload();
+
+      String jsonString = JSON.toJSONString(employeeWorkloads);
 
       response.setContentType("text/json;charset=utf-8");
       response.getWriter().write(jsonString);

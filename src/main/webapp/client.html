@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible"  content="IE=edge"/>
+		<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+		<link rel="stylesheet" href="css/client.css" />
+		<title>Car_Rental</title>
+	</head>
+<style>
+	 body {
+					background-image: url(imgs/log.svg);
+
+					background-position: left center;
+					background-size: cover;
+	 }
+</style>
+<script>
+
+		const inputs = document.querySelectorAll('.input_group input');
+
+		inputs.forEach(function(input) {
+			input.addEventListener('input', function() {
+				const label = input.nextElementSibling;
+
+				if (input.value.trim() !== '') {
+					label.classList.add('filled');
+				} else {
+					label.classList.remove('filled');
+				}
+			});
+		});
+
+		const form = document.querySelector('#myForm');
+
+		form.addEventListener('submit', function(event) {
+			event.preventDefault(); // Prevent form submission
+
+			// Get form data
+			const formData = new FormData(form);
+			// Send form data to the backend
+			fetch('/CarsRental/client/clientLogin', {
+				method: 'POST',
+				body: formData
+			})
+			.then(response => {
+				if (response.ok) {
+					// If successful, redirect to another page
+					window.location.href = 'clientInfo.html'; // Replace with your page URL
+				} else {
+					throw new Error('Failed to sign in');
+				}
+			})
+			.catch(error => console.error('Error:', error));
+		});
+	</script>
+<body>
+<div class="container">
+	<div class="container_right">
+		<div class="content">
+			<img class="logo" src="imgs/vehicle.png" alt="logo" />
+			<p class="header">Welcome to cars rental!!!</p>
+			
+			<form id="myForm">
+				<div class="input_group">
+					<input type="text" id="clientNo" name="clientNo" required>
+					<label for="clientNo">Client</label>
+				</div>
+				<div class="input_group">
+					<input type="password" id="password" name="password" required>
+					<label for="password">Password</label>
+				</div>
+				
+				<button type="submit">Sign In</button>
+			</form>
+		</div>
+	</div>
+</div>
+</body>
+</html>

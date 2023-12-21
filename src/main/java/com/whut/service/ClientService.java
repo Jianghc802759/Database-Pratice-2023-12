@@ -27,6 +27,14 @@ public interface ClientService {
     boolean updateClient(Client client);
 
     /**
+     * 客户登录
+     * @param clientNo
+     * @param password
+     * @return
+     */
+    boolean clientLogin(String clientNo, String password);
+
+    /**
      * 客户查询个人信息
      * @param clientNo
      * @return
@@ -38,6 +46,24 @@ public interface ClientService {
      * @return
      */
     List<Client> selectAllClient();
+
+    /**
+     * 查询客户街道
+     * @return
+     */
+    List<Map<String, String>> selectClientStreet();
+
+    /**
+     * 查询客户城市
+     * @return
+     */
+    List<Map<String, String>> selectClientCity();
+
+    /**
+     * 查询客户州
+     * @return
+     */
+    List<Map<String, String>> selectClientState();
 
     /**
      * 分页查询
@@ -55,4 +81,5 @@ public interface ClientService {
      * @return
      */
     PageBean<Client> selectClientByPageAndCondition(int currentPage, int pageSize, Client client);
+
 }

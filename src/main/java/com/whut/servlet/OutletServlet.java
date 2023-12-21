@@ -2,6 +2,7 @@ package com.whut.servlet;
 
 import com.alibaba.fastjson.JSON;
 import com.whut.pojo.Outlet;
+import com.whut.pojo.OutletLocation;
 import com.whut.pojo.PageBean;
 import com.whut.service.OutletService;
 import com.whut.service.impl.OutletServiceImpl;
@@ -13,6 +14,7 @@ import javax.servlet.annotation.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet("/outlet/*")
 public class OutletServlet extends BaseServlet {
@@ -66,10 +68,43 @@ public class OutletServlet extends BaseServlet {
         response.getWriter().write(jsonString);
     }
 
-    public void selectoutletByCondition(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-        String outletStreet = request.getParameter("outletStreet");
-        String outletCity = request.getParameter("outletCity");
-        String outletState = request.getParameter("outletState");
+    public void selectOutletStreet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        List<Map<String,String>> outletStreets = outletService.selectOutletStreet();
+
+        String jsonString = JSON.toJSONString(outletStreets);
+
+        response.setContentType("text/json;charset=utf-8");
+        response.getWriter().write(jsonString);
+    }
+
+    public void selectOutletCity(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        List<Map<String,String>> outletCitys = outletService.selectOutletCity();
+
+        String jsonString = JSON.toJSONString(outletCitys);
+
+        response.setContentType("text/json;charset=utf-8");
+        response.getWriter().write(jsonString);
+    }
+
+    public void selectOutletState(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        List<Map<String,String>> outletStates = outletService.selectOutletState();
+
+        String jsonString = JSON.toJSONString(outletStates);
+
+        response.setContentType("text/json;charset=utf-8");
+        response.getWriter().write(jsonString);
+    }
+
+    public void selectOutletByCondition(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        BufferedReader br = request.getReader();
+        String params = br.readLine();
+
+        OutletLocation outletLocation = JSON.parseObject(params, OutletLocation.class);
+
+        String outletStreet = outletLocation.getOutletStreet();
+        String outletCity = outletLocation.getOutletCity();
+        String outletState = outletLocation.getOutletState();
+
         System.out.println(outletStreet+" "+outletCity+" "+outletState);
 
         List<Outlet> outlets = outletService.selectOutletByCondition(outletStreet, outletCity, outletState);

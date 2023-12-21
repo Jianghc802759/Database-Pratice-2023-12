@@ -13,6 +13,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
+import java.util.Map;
 
 public class VehicleServiceImpl implements VehicleService {
     SqlSessionFactory factory = SqlSessionFactoryUtils.getSqlSessionFactory();
@@ -115,6 +116,63 @@ public class VehicleServiceImpl implements VehicleService {
         sqlSession.close();
 
         return vehicles;
+    }
+
+    /**
+     * 客户查询可用汽车
+     * @param outlet
+     * @return
+     */
+    @Override
+    public List<Vehicle> selectVehicleToClient(int outlet) {
+        SqlSession sqlSession = factory.openSession();
+        VehicleMapper vehicleMapper = sqlSession.getMapper(VehicleMapper.class);
+
+        List<Vehicle> vehicles = vehicleMapper.selectVehicleToClient(outlet);
+
+        sqlSession.close();
+
+        return vehicles;
+    }
+
+    /**
+     * 查询汽车制造商、型号、颜色视图
+     * @return
+     */
+    @Override
+    public List<Map<String, String>> selectVehicleMake() {
+        SqlSession sqlSession = factory.openSession();
+        VehicleMapper vehicleMapper = sqlSession.getMapper(VehicleMapper.class);
+
+        List<Map<String, String>> vehicleMakes = vehicleMapper.selectVehicleMake();
+
+        sqlSession.close();
+
+        return vehicleMakes;
+    }
+
+    @Override
+    public List<Map<String, String>> selectVehicleModel() {
+        SqlSession sqlSession = factory.openSession();
+        VehicleMapper vehicleMapper = sqlSession.getMapper(VehicleMapper.class);
+
+        List<Map<String, String>> vehicleModels = vehicleMapper.selectVehicleModel();
+
+        sqlSession.close();
+
+        return vehicleModels;
+    }
+
+    @Override
+    public List<Map<String, String>> selectVehicleColor() {
+        SqlSession sqlSession = factory.openSession();
+        VehicleMapper vehicleMapper = sqlSession.getMapper(VehicleMapper.class);
+
+        List<Map<String, String>> vehicleColors = vehicleMapper.selectVehicleColor();
+
+        sqlSession.close();
+
+        return vehicleColors;
     }
 
     /**

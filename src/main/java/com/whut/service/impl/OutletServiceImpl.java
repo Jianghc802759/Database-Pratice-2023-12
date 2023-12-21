@@ -12,6 +12,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
+import java.util.Map;
 
 public class OutletServiceImpl implements OutletService {
     SqlSessionFactory factory = SqlSessionFactoryUtils.getSqlSessionFactory();
@@ -91,21 +92,60 @@ public class OutletServiceImpl implements OutletService {
         }
     }
 
+    /**
+     * 查询门店街道、城市、州视图
+     * @return
+     */
     @Override
-    public List<Outlet> selectOutletByCondition(String _outletStreet, String _outletCity, String _outletState) {
+    public List<Map<String, String>> selectOutletStreet() {
+        SqlSession sqlSession = factory.openSession();
+        OutletMapper outletMapper = sqlSession.getMapper(OutletMapper.class);
+
+        List<Map<String, String>> outletStreets = outletMapper.selectOutletStreet();
+
+        sqlSession.close();
+
+        return outletStreets;
+    }
+
+    @Override
+    public List<Map<String, String>> selectOutletCity() {
+        SqlSession sqlSession = factory.openSession();
+        OutletMapper outletMapper = sqlSession.getMapper(OutletMapper.class);
+
+        List<Map<String, String>> outletCitys = outletMapper.selectOutletCity();
+
+        sqlSession.close();
+
+        return outletCitys;
+    }
+
+    @Override
+    public List<Map<String, String>> selectOutletState() {
+        SqlSession sqlSession = factory.openSession();
+        OutletMapper outletMapper = sqlSession.getMapper(OutletMapper.class);
+
+        List<Map<String, String>> outletStates = outletMapper.selectOutletState();
+
+        sqlSession.close();
+
+        return outletStates;
+    }
+
+    @Override
+    public List<Outlet> selectOutletByCondition(String outletStreet, String outletCity, String outletState) {
         SqlSession sqlSession = factory.openSession();
         OutletMapper outletMapper = sqlSession.getMapper(OutletMapper.class);
         EmployeeMapper employeeMapper = sqlSession.getMapper(EmployeeMapper.class);
 
-        String outletStreet = null, outletCity = null, outletState = null;
-        if(_outletStreet != null && _outletStreet.length() > 0){
-            outletStreet = "%" + _outletStreet + "%";
+        if(outletStreet != null && outletStreet.length() > 0){
+            outletStreet = "%" + outletStreet + "%";
         }
-        if(_outletCity != null && _outletCity.length() > 0){
-            outletCity = "%" + _outletCity + "%";
+        if(outletCity != null && outletCity.length() > 0){
+            outletCity = "%" + outletCity + "%";
         }
-        if(_outletState != null && _outletState.length() > 0){
-            outletState = "%" + _outletState + "%";
+        if(outletState != null && outletState.length() > 0){
+            outletState = "%" + outletState + "%";
         }
 
         List<Outlet> outlets = outletMapper.selectOutletByCondition(outletStreet, outletCity, outletState);

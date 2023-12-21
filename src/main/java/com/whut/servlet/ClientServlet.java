@@ -3,6 +3,7 @@ package com.whut.servlet;
 import com.alibaba.fastjson.JSON;
 import com.whut.pojo.Client;
 import com.whut.pojo.PageBean;
+import com.whut.pojo.UserInfo;
 import com.whut.service.ClientService;
 import com.whut.service.impl.ClientServiceImpl;
 import com.whut.util.GenerateUserId;
@@ -13,6 +14,7 @@ import javax.servlet.annotation.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet("/client/*")
 public class ClientServlet extends BaseServlet {
@@ -54,11 +56,27 @@ public class ClientServlet extends BaseServlet {
         String params = br.readLine();
 
         Client client = JSON.parseObject(params, Client.class);
-        System.out.println("update begin");
-        System.out.println(client);
-        System.out.println("update end");
 
         if(clientService.updateClient(client) == true){
+            response.getWriter().write("{\"success\": true}");
+        } else{
+            response.getWriter().write("{\"success\": false}");
+        }
+    }
+
+    public void clientLogin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        BufferedReader br = request.getReader();
+        String params = br.readLine();
+
+        UserInfo userInfo = JSON.parseObject(params, UserInfo.class);
+
+        String username = userInfo.getUsername();
+        String password = userInfo.getPassword();
+
+        if(clientService.clientLogin(username, password)){
+            HttpSession session = request.getSession();
+            session.setAttribute("clientNo", username);
+
             response.getWriter().write("{\"success\": true}");
         } else{
             response.getWriter().write("{\"success\": false}");
@@ -84,6 +102,33 @@ public class ClientServlet extends BaseServlet {
 
         response.setContentType("text/json;charset=utf-8");
         System.out.println(jsonString);
+        response.getWriter().write(jsonString);
+    }
+
+    public void selectClientStreet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        List<Map<String,String>> clientStreets = clientService.selectClientStreet();
+
+        String jsonString = JSON.toJSONString(clientStreets);
+
+        response.setContentType("text/json;charset=utf-8");
+        response.getWriter().write(jsonString);
+    }
+
+    public void selectClientCity(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        List<Map<String,String>> clientCitys = clientService.selectClientCity();
+
+        String jsonString = JSON.toJSONString(clientCitys);
+
+        response.setContentType("text/json;charset=utf-8");
+        response.getWriter().write(jsonString);
+    }
+
+    public void selectClientState(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        List<Map<String,String>> clientStates = clientService.selectClientState();
+
+        String jsonString = JSON.toJSONString(clientStates);
+
+        response.setContentType("text/json;charset=utf-8");
         response.getWriter().write(jsonString);
     }
 

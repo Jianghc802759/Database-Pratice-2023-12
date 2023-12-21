@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>用户信息管理</title>
+    <link rel="stylesheet" href="css/info.css">
+</head>
+
+<body>
+
+<div class="container">
+    <h2>用户信息</h2>
+    <div class="scrollable-container">
+        <form action="/CarsRental/client/selectClientStreet" method="post">
+            <div class="form-group">
+                <label for="username">用户名:</label>
+                <input type="text" id="username" name="username" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="gender">性别:</label>
+                <input type="text" id="gender" name="gender" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="tel">手机号:</label>
+                <input type="tel" id="tel" name="tel" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="email">邮箱:</label>
+                <input type="email" id="email" name="email" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="IDcard">身份证号:</label>
+                <input type="text" id="IDcard" name="IDcard" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="job">职业:</label>
+                <input type="text" id="job" name="job" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="address">职业:</label>
+                <input type="text" id="address" name="address" readonly>
+            </div>
+
+            <div class="form-group">
+                <button type="button" onclick="location.href='modify_info.jsp'" class="link-btn">修改信息</button>
+                <button type="button" onclick="location.href='change_password.jsp'" class="link-btn">修改密码</button>
+            </div>
+            <div class="form-group">
+                <button type="button" onclick="location.href='bind_card.jsp'" class="link-btn">绑定账户</button>
+                <button type="button" onclick="location.href='query_cards.jsp'" class="link-btn">查询账户</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // 解析后端返回的JSON字符串并填充表单项
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            // 在这里处理从后端接收到的 JSON 字符串
+            var responseData = JSON.parse(xhr.responseText);
+
+            document.getElementById('username').value = responseData.username;
+            document.getElementById('gender').value = responseData.gender;
+            document.getElementById('tel').value = responseData.tel;
+            document.getElementById('email').value = responseData.email;
+            document.getElementById('IDcard').value = responseData.iDcard;
+            document.getElementById('job').value = responseData.job;
+            document.getElementById('address').value = responseData.address;
+        }
+    };
+
+    xhr.open("GET", "/CarsRental/client/selectClientStreet", true);
+    xhr.send();
+</script>
+
+</body>
+</html>

@@ -4,6 +4,7 @@ import com.whut.pojo.Outlet;
 import com.whut.pojo.PageBean;
 
 import java.util.List;
+import java.util.Map;
 
 public interface OutletService {
     /**
@@ -23,6 +24,26 @@ public interface OutletService {
      * @param outlet
      */
     boolean updateOutlet(Outlet outlet);
+
+    /**
+     * 查询门店街道
+     * @return
+     */
+    List<Map<String, String>> selectOutletStreet();
+
+    /**
+     * 查询门店城市
+     * @return
+     */
+    List<Map<String, String>> selectOutletCity();
+
+    /**
+     * 查询门店州
+     * @return
+     */
+    List<Map<String, String>> selectOutletState();
+
+
 
     /**
      * 客户查询门店

@@ -37,6 +37,14 @@ public interface ClientMapper {
     Client selectClient(String clientNo);
 
     /**
+     * 查询客户的电话号码，作为密码
+     * @param clientNo
+     * @return
+     */
+    @Select("select clientTelNo from Client where clientNo = #{clientNo}")
+    String selectClientTelNo(String clientNo);
+
+    /**
      * 查询所有客户
      * @return
      */
@@ -75,4 +83,24 @@ public interface ClientMapper {
      */
     int selectClientCountByCondition(Client client);
 
+    /**
+     * 查询客户街道
+     * @return
+     */
+    @Select("select * from ClientStreetView")
+    List<Map<String,String>> selectClientStreet();
+
+    /**
+     * 查询客户城市
+     * @return
+     */
+    @Select("select * from ClientCityView")
+    List<Map<String,String>> selectClientCity();
+
+    /**
+     * 查询客户州
+     * @return
+     */
+    @Select("select * from ClientStateView")
+    List<Map<String,String>> selectClientState();
 }
