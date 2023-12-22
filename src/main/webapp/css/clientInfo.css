@@ -4,11 +4,14 @@
  	font-family: 'Caveat', cursive;
  }
 .container {
+	background-color: #F3F4F6;
+	opacity: 0.8;
 	max-width: 800px;
 	margin: 20px auto;
 	padding: 20px;
 	border-radius: 8px;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	
 }
 
 h1 {
@@ -20,12 +23,28 @@ h1 {
 	margin-top: 20px;
 	font-size: 1.5rem;
 	
+	
 }
 
 .info-item {
 	margin-bottom: 10px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 label {
 	font-weight: bold;
+}
+.centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+
+#submitBtn {
+  padding: 10px 20px; /* 你可以根据需要调整按钮的大小 */
+  font-size: 16px; /* 你可以根据需要调整按钮的字体大小 */
+  background-color: coral;
 }
