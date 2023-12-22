@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="utf-8" />
   <title>数据库后端界面</title>
   <link rel="stylesheet" type="text/css" href="css/AllClientInfo.css">
   <style>
@@ -566,21 +567,8 @@
 			}
 
 
-			// 获取模态框及其组件
-			var modal = document.getElementById("myModal");
-			var span = document.getElementsByClassName("close")[0];
-			var modalData = document.getElementById("modalData");
-
-			// 当用户点击 X 符号或点击（模态框之外的）任何地方，关闭模态框
-			span.onclick = function() {
-			  modal.style.display = "none";
-			}
-			window.onclick = function(event) {
-			  if (event.target == modal) {
-				modal.style.display = "none";
-			  }
-			}
-
+		window.onload = function() {
+			console.log(111)
 		  function fetchViewData(url, containerId) {
 			fetch(url, {
 			  method: 'GET',
@@ -624,6 +612,7 @@
 			fetchViewData('/CarsRental/client/selectClientState', 'modalData3'); // 第三个区域的数据
 			modal.style.display = 'block'; // 显示模态框
 		  });
+		};
 </script>
 
 
@@ -685,7 +674,7 @@
 		<button class="edit-client-button" onclick="openEditClientModal()">修改信息</button>
 		<button class="delete-client-button" id="deleteButton" onclick="deleteClients()">删除信息</button>
 		<button class="open-client-button" id="openModalButton" onclick="openModal()">查询信息</button>
-		<button class="view-client-button" id="viewButton">视图窗口</button>
+		<button class="view-client-button" id="viewButton" onclick="viewButton()">视图窗口</button>
     </div>
     <!-- 添加选项1的相应内容 -->
 	<div id="clientTable"></div> <!-- 添加客户的弹窗 -->
@@ -773,7 +762,7 @@
 <div id="myModal" class="modal">
   <!-- 模态框内容 -->
   <div class="modal-content">
-    <span class="close">&times;</span>
+    <span class="close"></span>
     <div id="modalData1"></div> <!-- 第一个区域的数据 -->
     <div id="modalData2"></div> <!-- 第二个区域的数据 -->
     <div id="modalData3"></div> <!-- 第三个区域的数据 -->
