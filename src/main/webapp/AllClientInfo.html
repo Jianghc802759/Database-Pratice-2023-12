@@ -568,13 +568,14 @@
 
 
 		window.onload = function() {
-			console.log(111)
+
 		  function fetchViewData(url, containerId) {
 			fetch(url, {
 			  method: 'GET',
 			})
 			  .then(response => response.json())
 			  .then(data => {
+				 console.log(data)
 				// 创建一个表格来存储数据
 				var table = document.createElement('table');
 
@@ -610,6 +611,7 @@
 			fetchViewData('/CarsRental/client/selectClientStreet', 'modalData1'); // 第一个区域的数据
 			fetchViewData('/CarsRental/client/selectClientCity', 'modalData2'); // 第二个区域的数据
 			fetchViewData('/CarsRental/client/selectClientState', 'modalData3'); // 第三个区域的数据
+			var modal = document.getElementById("myModal")
 			modal.style.display = 'block'; // 显示模态框
 		  });
 		};
@@ -758,16 +760,27 @@
 
 <div id="searchResults"></div>
 
-<!-- 模态框结构 -->
 <div id="myModal" class="modal">
   <!-- 模态框内容 -->
   <div class="modal-content">
     <span class="close"></span>
-    <div id="modalData1"></div> <!-- 第一个区域的数据 -->
-    <div id="modalData2"></div> <!-- 第二个区域的数据 -->
-    <div id="modalData3"></div> <!-- 第三个区域的数据 -->
+    <div class="modal-row">
+      <div class="modal-section modal-section-left">
+        <h2>客户街道</h2>
+        <div id="modalData1"></div> <!-- 左侧区域的数据 -->
+      </div>
+      <div class="modal-section modal-section-center">
+        <h2>客户城市</h2>
+        <div id="modalData2"></div> <!-- 中间区域的数据 -->
+      </div>
+      <div class="modal-section modal-section-right">
+        <h2>客户州</h2>
+        <div id="modalData3"></div> <!-- 右侧区域的数据 -->
+      </div>
+    </div>
   </div>
 </div>
+
 
 
 </body>
