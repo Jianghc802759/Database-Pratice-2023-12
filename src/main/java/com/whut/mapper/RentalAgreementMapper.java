@@ -7,6 +7,7 @@ import org.apache.ibatis.jdbc.SQL;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 public interface RentalAgreementMapper {
     /**
@@ -33,6 +34,13 @@ public interface RentalAgreementMapper {
      */
     @Select("select count(*) from RentalAgreement")
     int selectRentalAgreementCount();
+
+    /**
+     * 查询门店对应的业绩
+     * @return
+     */
+    @Select("select outletNo, totalCount from RentalAgreementByOutlet group by outletNo order by totalCount desc ")
+    List<Map<String, String>> selectRentalAgreementByOutlet();
 
     /**
      * 查询所有租赁协议
