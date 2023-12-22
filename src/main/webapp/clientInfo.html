@@ -3,105 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="css/clientInfo.css" />
+    <link rel="stylesheet" href="css/clientInfo.css" />
     <title>Client Information</title>
     <style>
-		body {
+        body {
             background-image: url(imgs/log.svg);
             background-position: left center;
             background-size: cover;
         }
+        .info-item {
+            margin-bottom: 10px;
+        }
     </style>
-</head>
-
- <script>
-        const clientInfoDiv = document.getElementById('clientInfo');
-
-        // Fetch data from backend
-        fetch('/CarsRental/client/selectClient')
-            .then(response => response.json())
-            .then(data => {
-                for (const key in data) {
-                    if (Object.hasOwnProperty.call(data, key)) {
-                        const value = data[key];
-                        const inputField = document.createElement('input');
-                        inputField.style = "border:none; box-radius:25%; outline:medium; text-align:center;background-color: transparent;font-size: 1.2rem;";
-                        inputField.type = 'text';
-                        inputField.value = value;
-                        inputField.name = key;
-                        clientInfoDiv.appendChild(inputField);
-                    }
-                }
-            })
-            .catch(error => console.error('Error fetching data:', error));
-    </script>
 	
+</head>
+<script>
+	// Fetch initial data from backend
+	fetch('/CarsRental/client/selectClient')
+		.then(response => response.json())
+		.then(data => {
+			// Fill the data into the input fields
+			document.getElementById('clientNo').value = data.clientNo;
+			document.getElementById('clientName').value = data.clientName;
+			document.getElementById('clientStreet').value = data.clientStreet;
+			document.getElementById('clientCity').value = data.clientCity;
+			document.getElementById('clientState').value = data.clientState;
+			document.getElementById('clientZipCode').value = data.clientZipCode;
+			document.getElementById('clientTelNo').value = data.clientTelNo;
+			document.getElementById('clientFaxNo').value = data.clientFaxNo;
+			document.getElementById('clientWebAddress').value = data.clientWebAddress;
+			document.getElementById('contactName').value = data.contactName;
+			document.getElementById('contactTelNo').value = data.contactTelNo;
+			document.getElementById('contactFaxNo').value = data.contactFaxNo;
+			document.getElementById('contactEmailAddress').value = data.contactEmailAddress;
+		})
+		.catch(error => console.error('Error fetching data:', error));
+
+	// Handle submit button click event
+	const clientInfoInputs = document.querySelectorAll('.client-info input');
+	const submitBtn = document.getElementById('submitBtn');
+	
+	clientInfoInputs.forEach(input => {
+	            input.addEventListener('input', () => {
+	                submitBtn.style.display = 'block';
+	            });
+	        });
+	submitBtn.addEventListener('click', () => {
+		const updatedClientData = {
+			clientNo: document.getElementById('clientNo').value,
+			clientName: document.getElementById('clientName').value,
+			clientStreet: document.getElementById('clientStreet').value,
+			clientCity: document.getElementById('clientCity').value,
+			clientState: document.getElementById('clientState').value,
+			clientZipCode: document.getElementById('clientZipCode').value,
+			clientTelNo: document.getElementById('clientTelNo').value,
+			clientFaxNo: document.getElementById('clientFaxNo').value,
+			clientWebAddress: document.getElementById('clientWebAddress').value,
+			contactName: document.getElementById('contactName').value,
+			contactTelNo: document.getElementById('contactTelNo').value,
+			contactFaxNo: document.getElementById('contactFaxNo').value,
+			contactEmailAddress: document.getElementById('contactEmailAddress').value,
+		};
+
+		// Send updated data to backend
+		fetch('/CarsRental/client/updateClient', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(updatedClientData),
+		})
+		.then(response => {
+			if (response.ok) {
+				console.log('成功更新客户信息');
+			} else {
+				console.error('更新客户信息时出错');
+			}
+		})
+		.catch(error => console.error('Error:', error));
+	});
+</script>
 <body>
-<!--    <div class="container">
+    <div class="container">
         <h1>Client Information</h1>
         <div class="client-info">
             <div class="info-item">
-                <label>Client No:</label>
-                <input style="border:none;  box-radius:25%; outline:medium; text-align:center;background-color: transparent;font-size: 1.2rem;" type="text" value="[clientNo]" readonly>
+                <label>Client No:</label> 
+                <input id="clientNo" type="text" style="border:none; border-radius:25px; outline:none; text-align:center; background-color: transparent; font-size:1.2rem;" readonly>
             </div>
             <div class="info-item">
-                <label>Client Name:</label>
-                <input style="border:none;  box-radius:25%; outline:medium; text-align:center;background-color: transparent;font-size: 1.2rem;" type="text" value="[clientName]">
+                <label>Client Name:</label> 
+                <input id="clientName" type="text" style="border:none; border-radius:25px; outline:none; text-align:center; background-color: transparent; font-size:1.2rem;">
             </div>
             <div class="info-item">
-                <label>Client Street:</label>
-                <input style="border:none;  box-radius:25%; outline:medium; text-align:center;background-color: transparent;font-size: 1.2rem;" type="text" value="[clientStreet]">
+                <label>Client Street:</label> 
+                <input id="clientStreet" type="text" style="border:none; border-radius:25px; outline:none; text-align:center; background-color: transparent; font-size:1.2rem;">
             </div>
-            <div class="info-item">
-                <label>Client City:</label>
-                <input style="border:none;  box-radius:25%; outline:medium; text-align:center;background-color: transparent;font-size: 1.2rem;" type="text" value="[clientCity]">
-            </div>
-            <div class="info-item">
-                <label>Client State:</label>
-                <input style="border:none;  box-radius:25%; outline:medium; text-align:center;background-color: transparent;font-size: 1.2rem;" type="text" value="[clientState]">
-            </div>
-            <div class="info-item">
-                <label>Client Zip Code:</label>
-                <input style="border:none;  box-radius:25%; outline:medium; text-align:center;background-color: transparent;font-size: 1.2rem;" type="text" value="[clientZipCode]">
-            </div>
-            <div class="info-item">
-                <label>Client Tel No:</label>
-                <input style="border:none;  box-radius:25%; outline:medium; text-align:center;background-color: transparent;font-size: 1.2rem;" type="text" value="[clientTelNo]">
-            </div>
-            <div class="info-item">
-                <label>Client Fax No:</label>
-                <input style="border:none;  box-radius:25%; outline:medium; text-align:center;background-color: transparent;font-size: 1.2rem;" type="text" value="[clientFaxNo]">
-            </div>
-            <div class="info-item">
-                <label>Client Web Address:</label>
-                <input style="border:none;  box-radius:25%; outline:medium; text-align:center;background-color: transparent;font-size: 1.2rem;" type="text" value="[clientWebAddress]">
-            </div>
-            <div class="info-item">
-                <label>Contact Name:</label>
-                <input style="border:none;  box-radius:25%; outline:medium; text-align:center;background-color: transparent;font-size: 1.2rem;" type="text" value="[contactName]">
-            </div>
-            <div class="info-item">
-                <label>Contact Tel No:</label>
-                <input style="border:none;  box-radius:25%; outline:medium; text-align:center;background-color: transparent;font-size: 1.2rem;" type="text" value="[contactTelNo]">
-            </div>
-            <div class="info-item">
-                <label>Contact Fax No:</label>
-                <input style="border:none;  box-radius:25%; outline:medium; text-align:center;background-color: transparent;font-size: 1.2rem;" type="text" value="[contactFaxNo]">
-            </div>
-            <div class="info-item">
-                <label>Contact Email Address:</label>
-                <input style="border:none;  box-radius:25%; outline:medium; text-align:center;background-color: transparent;font-size: 1.2rem;" type="text" value="[contactEmailAddress]">
-            </div>
+			<div class="info-item">
+			    <label>Client City:</label> 
+			    <input id="clientCity" type="text" style="border:none; border-radius:25px; outline:none; text-align:center; background-color: transparent; font-size:1.2rem;">
+			</div>
+			<div class="info-item">
+			    <label>Client State:</label> 
+			    <input id="clientState" type="text" style="border:none; border-radius:25px; outline:none; text-align:center; background-color: transparent; font-size:1.2rem;">
+			</div>
+			<div class="info-item">
+			    <label>Client ZipCode:</label> 
+			    <input id="clientZipCode" type="text" style="border:none; border-radius:25px; outline:none; text-align:center; background-color: transparent; font-size:1.2rem;">
+			</div>
+			<div class="info-item">
+			    <label>Client TelNo:</label> 
+			    <input id="clientTelNo" type="text" style="border:none; border-radius:25px; outline:none; text-align:center; background-color: transparent; font-size:1.2rem;">
+			</div>
+			<div class="info-item">
+			    <label>Client FaxNo:</label> 
+			    <input id="clientFaxNo" type="text" style="border:none; border-radius:25px; outline:none; text-align:center; background-color: transparent; font-size:1.2rem;">
+			</div>
+			<div class="info-item">
+			    <label>Client WebAddress:</label> 
+			    <input id="clientWebAddress" type="text" style="border:none; border-radius:25px; outline:none; text-align:center; background-color: transparent; font-size:1.2rem;">
+			</div>
+			<div class="info-item">
+			    <label>Contact Name:</label> 
+			    <input id="contactName" type="text" style="border:none; border-radius:25px; outline:none; text-align:center; background-color: transparent; font-size:1.2rem;">
+			</div>
+			<div class="info-item">
+			    <label>Contact TelNo:</label> 
+			    <input id="contactTelNo" type="text" style="border:none; border-radius:25px; outline:none; text-align:center; background-color: transparent; font-size:1.2rem;">
+			</div>
+			<div class="info-item">
+			    <label>Contact FaxNo:</label> 
+			    <input id="contactFaxNo" type="text" style="border:none; border-radius:25px; outline:none; text-align:center; background-color: transparent; font-size:1.2rem;">
+			</div>
+			<div class="info-item">
+			    <label>Contact EmailAddress:</label> 
+			    <input id="contactEmailAddress" type="text" style="border:none; border-radius:25px; outline:none; text-align:center; background-color: transparent; font-size:1.2rem;">
+			</div>
+			<div class="info-item">
+			    <button id="submitBtn" type="button" style="display: none;">提交</button>
+		 </div>
         </div>
     </div>
-	 -->
-	    <div class="container">
-	        <h1>Client Information</h1>
-	        <div class="client-info" id="clientInfo">
-	            <!-- Input fields will be populated here -->
-	        </div>
-	    </div>
+
 </body>
-
-
 </html>
