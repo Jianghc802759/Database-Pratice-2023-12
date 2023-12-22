@@ -86,6 +86,23 @@
                    .catch(error => console.error('Error:', error));
                });
            });
+		   
+		       // 更新页面内容函数
+		       function updatePageContent(data) {
+		           document.getElementById('clientNo').value = data.clientNo;
+		           document.getElementById('clientName').value = data.clientName;
+		           document.getElementById('clientStreet').value = data.clientStreet;
+		           document.getElementById('clientCity').value = data.clientCity;
+		           document.getElementById('clientState').value = data.clientState;
+		           document.getElementById('clientZipCode').value = data.clientZipCode;
+		           document.getElementById('clientTelNo').value = data.clientTelNo;
+		           document.getElementById('clientFaxNo').value = data.clientFaxNo;
+		           document.getElementById('clientWebAddress').value = data.clientWebAddress;
+		           document.getElementById('contactName').value = data.contactName;
+		           document.getElementById('contactTelNo').value = data.contactTelNo;
+		           document.getElementById('contactFaxNo').value = data.contactFaxNo;
+		           document.getElementById('contactEmailAddress').value = data.contactEmailAddress;
+		       }
 </script>
 <body>
     <div class="container">
