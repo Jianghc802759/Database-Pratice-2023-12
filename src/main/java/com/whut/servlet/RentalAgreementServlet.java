@@ -12,6 +12,7 @@ import javax.servlet.annotation.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet("/rentalAgreement/*")
 public class RentalAgreementServlet extends BaseServlet {
@@ -54,6 +55,15 @@ public class RentalAgreementServlet extends BaseServlet {
         } else{
             response.getWriter().write("{\"success\": false}");
         }
+    }
+
+    public void selectRentalAgreementByOutlet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        List<Map<String, String>> counts = rentalAgreementService.selectRentalAgeementByOutlet();
+
+        String jsonString = JSON.toJSONString(counts);
+
+        response.setContentType("text/json;charset=utf-8");
+        response.getWriter().write(jsonString);
     }
 
     public void selectAllRentalAgreement(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
