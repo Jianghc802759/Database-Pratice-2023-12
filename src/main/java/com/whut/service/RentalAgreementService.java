@@ -4,6 +4,7 @@ import com.whut.pojo.PageBean;
 import com.whut.pojo.RentalAgreement;
 
 import java.util.List;
+import java.util.Map;
 
 public interface RentalAgreementService {
     /**
@@ -23,6 +24,12 @@ public interface RentalAgreementService {
      * @param rentalAgreement
      */
     boolean updateRentalAgreement(RentalAgreement rentalAgreement);
+
+    /**
+     * 查询门店业绩
+     * @return
+     */
+    List<Map<String, String>> selectRentalAgeementByOutlet();
 
     /**
      * 查询所有协议
