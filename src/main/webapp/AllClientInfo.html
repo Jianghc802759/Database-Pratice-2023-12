@@ -619,7 +619,18 @@
 			var modal = document.getElementById("myModal")
 			modal.style.display = 'block'; // 显示模态框
 		  });
+		  function closeModal() {
+		      var modal = document.getElementById("myModal");
+		      modal.style.display = 'none'; // 隐藏模态框
+		    }
+		  
+		    // 添加事件监听器，在点击关闭按钮时调用 closeModal 函数
+		    document.getElementById('closeButton').addEventListener('click', function () {
+		      closeModal();
+		    });
+		  
 		};
+		  
 </script>
 
 
@@ -767,8 +778,7 @@
 
 <div id="myModal" class="modal">
   <!-- 模态框内容 -->
-  <div class="modal-content">
-    <span class="close"></span>
+  <div class="modal-contents">
     <div class="modal-row">
       <div class="modal-section modal-section-left">
         <h2>客户街道</h2>
@@ -783,6 +793,9 @@
         <div id="modalData3"></div> <!-- 右侧区域的数据 -->
       </div>
     </div>
+	    <div class="modal-footer">
+	      <button id="closeButton">关闭</button>
+	    </div>
   </div>
 </div>
 
