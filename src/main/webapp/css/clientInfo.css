@@ -11,7 +11,7 @@
 	padding: 20px;
 	border-radius: 8px;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-	
+	text-align: center;
 }
 
 h1 {
@@ -22,20 +22,35 @@ h1 {
 .client-info {
 	margin-top: 20px;
 	font-size: 1.5rem;
-	
+	margin-left: 200px;
 	
 }
 
 .info-item {
-	margin-bottom: 10px;
-	display: flex;
-	justify-content: center;
-	align-items: center;
+	    display: flex;
+	    justify-content: center;
+	    align-items: center;
+	    text-align: left; /* 文本从左边对齐 */
+	    margin-bottom: 10px;
 }
 
-label {
-	font-weight: bold;
+label {			
+			    display: inline-block;
+			    width: 150px; /* 设置固定宽度 */
+			    text-align: right; /* 设置文本右对齐 */
+			    margin-right: 50px; /* 添加适当的右边距 */
+			    font-weight: bold;
+        }
+input {
+    flex: 1;
+    border: none;
+    border-radius: 25px;
+    outline: none;
+    background-color: transparent;
+    font-size: 1.2rem;
 }
+
+
 .centered {
   display: flex;
   justify-content: center;
