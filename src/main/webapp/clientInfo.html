@@ -40,14 +40,10 @@
 		.catch(error => console.error('Error fetching data:', error));
 
 	// Handle submit button click event
-	const clientInfoInputs = document.querySelectorAll('.client-info input');
+
 	const submitBtn = document.getElementById('submitBtn');
 	
-	clientInfoInputs.forEach(input => {
-	            input.addEventListener('input', () => {
-	                submitBtn.style.display = 'block';
-	            });
-	        });
+
 	submitBtn.addEventListener('click', () => {
 		const updatedClientData = {
 			clientNo: document.getElementById('clientNo').value,
@@ -89,58 +85,60 @@
         <div class="client-info">
             <div class="info-item">
                 <label>Client No:</label> 
-                <input id="clientNo" type="text" style="border:none; border-radius:25px; outline:none; text-align:center; background-color: transparent; font-size:1.2rem;" readonly>
+                <input id="clientNo" type="text" style="border:none; border-radius:25px; outline:none;  background-color: transparent; font-size:1.2rem;" readonly>
             </div>
             <div class="info-item">
                 <label>Client Name:</label> 
-                <input id="clientName" type="text" style="border:none; border-radius:25px; outline:none; text-align:center; background-color: transparent; font-size:1.2rem;">
+                <input id="clientName" type="text" style="border:none; border-radius:25px; outline:none;  background-color: transparent; font-size:1.2rem;">
             </div>
             <div class="info-item">
                 <label>Client Street:</label> 
-                <input id="clientStreet" type="text" style="border:none; border-radius:25px; outline:none; text-align:center; background-color: transparent; font-size:1.2rem;">
+                <input id="clientStreet" type="text" style="border:none; border-radius:25px; outline:none;  background-color: transparent; font-size:1.2rem;">
             </div>
 			<div class="info-item">
 			    <label>Client City:</label> 
-			    <input id="clientCity" type="text" style="border:none; border-radius:25px; outline:none; text-align:center; background-color: transparent; font-size:1.2rem;">
+			    <input id="clientCity" type="text" style="border:none; border-radius:25px; outline:none;  background-color: transparent; font-size:1.2rem;">
 			</div>
 			<div class="info-item">
 			    <label>Client State:</label> 
-			    <input id="clientState" type="text" style="border:none; border-radius:25px; outline:none; text-align:center; background-color: transparent; font-size:1.2rem;">
+			    <input id="clientState" type="text" style="border:none; border-radius:25px; outline:none;  background-color: transparent; font-size:1.2rem;">
 			</div>
 			<div class="info-item">
 			    <label>Client ZipCode:</label> 
-			    <input id="clientZipCode" type="text" style="border:none; border-radius:25px; outline:none; text-align:center; background-color: transparent; font-size:1.2rem;">
+			    <input id="clientZipCode" type="text" style="border:none; border-radius:25px; outline:none;  background-color: transparent; font-size:1.2rem;">
 			</div>
 			<div class="info-item">
 			    <label>Client TelNo:</label> 
-			    <input id="clientTelNo" type="text" style="border:none; border-radius:25px; outline:none; text-align:center; background-color: transparent; font-size:1.2rem;">
+			    <input id="clientTelNo" type="text" style="border:none; border-radius:25px; outline:none;  background-color: transparent; font-size:1.2rem;">
 			</div>
 			<div class="info-item">
 			    <label>Client FaxNo:</label> 
-			    <input id="clientFaxNo" type="text" style="border:none; border-radius:25px; outline:none; text-align:center; background-color: transparent; font-size:1.2rem;">
+			    <input id="clientFaxNo" type="text" style="border:none; border-radius:25px; outline:none;  background-color: transparent; font-size:1.2rem;">
 			</div>
 			<div class="info-item">
 			    <label>Client WebAddress:</label> 
-			    <input id="clientWebAddress" type="text" style="border:none; border-radius:25px; outline:none; text-align:center; background-color: transparent; font-size:1.2rem;">
+			    <input id="clientWebAddress" type="text" style="border:none; border-radius:25px; outline:none;  background-color: transparent; font-size:1.2rem;">
 			</div>
 			<div class="info-item">
 			    <label>Contact Name:</label> 
-			    <input id="contactName" type="text" style="border:none; border-radius:25px; outline:none; text-align:center; background-color: transparent; font-size:1.2rem;">
+			    <input id="contactName" type="text" style="border:none; border-radius:25px; outline:none;  background-color: transparent; font-size:1.2rem;">
 			</div>
 			<div class="info-item">
 			    <label>Contact TelNo:</label> 
-			    <input id="contactTelNo" type="text" style="border:none; border-radius:25px; outline:none; text-align:center; background-color: transparent; font-size:1.2rem;">
+			    <input id="contactTelNo" type="text" style="border:none; border-radius:25px; outline:none;  background-color: transparent; font-size:1.2rem;">
 			</div>
 			<div class="info-item">
 			    <label>Contact FaxNo:</label> 
-			    <input id="contactFaxNo" type="text" style="border:none; border-radius:25px; outline:none; text-align:center; background-color: transparent; font-size:1.2rem;">
+			    <input id="contactFaxNo" type="text" style="border:none; border-radius:25px; outline:none;  background-color: transparent; font-size:1.2rem;">
 			</div>
 			<div class="info-item">
 			    <label>Contact EmailAddress:</label> 
-			    <input id="contactEmailAddress" type="text" style="border:none; border-radius:25px; outline:none; text-align:center; background-color: transparent; font-size:1.2rem;">
+			    <input id="contactEmailAddress" type="text" style="border:none; border-radius:25px; outline:none;  background-color: transparent; font-size:1.2rem;">
 			</div>
 			<div class="info-item">
-			    <button id="submitBtn" type="button" style="display: none;">提交</button>
+			    <div class="centered">
+			      <button id="submitBtn" type="button">修改</button>
+			    </div>
 		 </div>
         </div>
     </div>
