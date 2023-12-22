@@ -69,6 +69,8 @@ public class EmployeeServlet extends BaseServlet {
       if(employeeService.employeeLogin(username, password)){
          HttpSession session = request.getSession();
          session.setAttribute("employeeNo",username);
+         Integer outletNo = employeeService.selectEmployee(username).getOutletNo();
+         session.setAttribute("outletNo",outletNo);
 
          response.getWriter().write("{\"success\": true}");
       } else{

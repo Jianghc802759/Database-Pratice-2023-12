@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/clientInfo.css" />
+    <title>Client Information</title>
+    <style>
+        body {
+            background-image: url(imgs/log.svg);
+            background-position: left center;
+            background-size: cover;
+        }
+        .info-item {
+            margin-bottom: 10px;
+        }
+    </style>
+
+</head>
+<script>
+    // Fetch initial data from backend
+    fetch('/CarsRental/client/selectClient')
+        .then(response => response.json())
+        .then(data => {
+            // Fill the data into the input fields
+            document.getElementById('clientNo').value = data.clientNo;
+            document.getElementById('clientName').value = data.clientName;
+            document.getElementById('clientStreet').value = data.clientStreet;
+            document.getElementById('clientCity').value = data.clientCity;
+            document.getElementById('clientState').value = data.clientState;
+            document.getElementById('clientZipCode').value = data.clientZipCode;
+            document.getElementById('clientTelNo').value = data.clientTelNo;
+            document.getElementById('clientFaxNo').value = data.clientFaxNo;
+            document.getElementById('clientWebAddress').value = data.clientWebAddress;
+            document.getElementById('contactName').value = data.contactName;
+            document.getElementById('contactTelNo').value = data.contactTelNo;
+            document.getElementById('contactFaxNo').value = data.contactFaxNo;
+            document.getElementById('contactEmailAddress').value = data.contactEmailAddress;
+        })
+        .catch(error => console.error('Error fetching data:', error));
+
+    // Handle submit button click event
+
+    // 在DOM加载完成后绑定事件监听
+    document.addEventListener('DOMContentLoaded', function() {
+        // 获取提交按钮
+        const submitBtn = document.getElementById('submitBtn');
+
+        // 添加点击事件监听
+        submitBtn.addEventListener('click', function(event) {
+            event.preventDefault(); // 阻止表单的默认提交行为
+
+            // 收集表单数据
+            const updatedClientData = {
+                clientNo: document.getElementById('clientNo').value,
+                clientName: document.getElementById('clientName').value,
+                clientStreet: document.getElementById('clientStreet').value,
+                clientCity: document.getElementById('clientCity').value,
+                clientState: document.getElementById('clientState').value,
+                clientZipCode: document.getElementById('clientZipCode').value,
+                clientTelNo: document.getElementById('clientTelNo').value,
+                clientFaxNo: document.getElementById('clientFaxNo').value,
+                clientWebAddress: document.getElementById('clientWebAddress').value,
+                contactName: document.getElementById('contactName').value,
+                contactTelNo: document.getElementById('contactTelNo').value,
+                contactFaxNo: document.getElementById('contactFaxNo').value,
+                contactEmailAddress: document.getElementById('contactEmailAddress').value
+            };
+            console.log(updatedClientData)
+
+            // 发送更新数据到后端
+            fetch('/CarsRental/client/updateClient', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updatedClientData),
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert('成功更新客户信息');
+
+                    } else {
+                        alert('更新客户信息时出错');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    });
+
+    // 更新页面内容函数
+    function updatePageContent(data) {
+        document.getElementById('clientNo').value = data.clientNo;
+        document.getElementById('clientName').value = data.clientName;
+        document.getElementById('clientStreet').value = data.clientStreet;
+        document.getElementById('clientCity').value = data.clientCity;
+        document.getElementById('clientState').value = data.clientState;
+        document.getElementById('clientZipCode').value = data.clientZipCode;
+        document.getElementById('clientTelNo').value = data.clientTelNo;
+        document.getElementById('clientFaxNo').value = data.clientFaxNo;
+        document.getElementById('clientWebAddress').value = data.clientWebAddress;
+        document.getElementById('contactName').value = data.contactName;
+        document.getElementById('contactTelNo').value = data.contactTelNo;
+        document.getElementById('contactFaxNo').value = data.contactFaxNo;
+        document.getElementById('contactEmailAddress').value = data.contactEmailAddress;
+    }
+</script>
+<body>
+<div class="container">
+    <h1>Client Information</h1>
+    <form id="clientForm">
+        <div class="client-info">
+            <div class="info-item">
+                <label>Client No:</label>
+                <input id="clientNo" type="text"  readonly>
+            </div>
+            <div class="info-item">
+                <label>Client Name:</label>
+                <input id="clientName" type="text" >
+            </div>
+            <div class="info-item">
+                <label>Client Street:</label>
+                <input id="clientStreet" type="text" >
+            </div>
+            <div class="info-item">
+                <label>Client City:</label>
+                <input id="clientCity" type="text" >
+            </div>
+            <div class="info-item">
+                <label>Client State:</label>
+                <input id="clientState" type="text" >
+            </div>
+            <div class="info-item">
+                <label>Client ZipCode:</label>
+                <input id="clientZipCode" type="text" >
+            </div>
+            <div class="info-item">
+                <label>Client TelNo:</label>
+                <input id="clientTelNo" type="text" >
+            </div>
+            <div class="info-item">
+                <label>Client FaxNo:</label>
+                <input id="clientFaxNo" type="text" >
+            </div>
+            <div class="info-item">
+                <label>Client WebAddress:</label>
+                <input id="clientWebAddress" type="text" >
+            </div>
+            <div class="info-item">
+                <label>Contact Name:</label>
+                <input id="contactName" type="text" >
+            </div>
+            <div class="info-item">
+                <label>Contact TelNo:</label>
+                <input id="contactTelNo" type="text" >
+            </div>
+            <div class="info-item">
+                <label>Contact FaxNo:</label>
+                <input id="contactFaxNo" type="text" >
+            </div>
+            <div class="info-item">
+                <label>Contact EmailAddress:</label>
+                <input id="contactEmailAddress" type="text">
+            </div>
+
+
+        </div>
+
+        <div class="centered">
+            <button id="submitBtn" type="button">修改</button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

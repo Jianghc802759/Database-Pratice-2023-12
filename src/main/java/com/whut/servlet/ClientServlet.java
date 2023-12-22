@@ -57,6 +57,8 @@ public class ClientServlet extends BaseServlet {
 
         Client client = JSON.parseObject(params, Client.class);
 
+        System.out.println(client);
+
         if(clientService.updateClient(client) == true){
             response.getWriter().write("{\"success\": true}");
         } else{
@@ -69,6 +71,10 @@ public class ClientServlet extends BaseServlet {
         String params = br.readLine();
 
         UserInfo userInfo = JSON.parseObject(params, UserInfo.class);
+
+        System.out.println("login begin");
+        System.out.println(userInfo);
+        System.out.println("login end");
 
         String username = userInfo.getUsername();
         String password = userInfo.getPassword();
@@ -88,6 +94,7 @@ public class ClientServlet extends BaseServlet {
         String clientNo = (String) session.getAttribute("clientNo");
 
         Client client = clientService.selectClient(clientNo);
+        System.out.println(client);
 
         String jsonString = JSON.toJSONString(client);
 
@@ -109,6 +116,10 @@ public class ClientServlet extends BaseServlet {
         List<Map<String,String>> clientStreets = clientService.selectClientStreet();
 
         String jsonString = JSON.toJSONString(clientStreets);
+
+        System.out.println("street begin");
+        System.out.println(jsonString);
+        System.out.println("street end");
 
         response.setContentType("text/json;charset=utf-8");
         response.getWriter().write(jsonString);

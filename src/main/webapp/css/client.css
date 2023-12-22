@@ -9,7 +9,7 @@
 	--extra-light:#f3f4f6;
 	--white:#ffffff;
 }
-	
+
 *{
 	padding: 0;
 	margin: 0;
@@ -45,7 +45,7 @@ body{
 	color: var(--secondary-color);
 	text-align: center;
 }
-	
+
 form{
 	display: grid;
 }
@@ -55,9 +55,9 @@ form{
 }
 .input_group input:focus ~ label,
 .input_group input:valid ~ label {
-            top: -20px;
-            font-size: 0.8rem;
-        }
+	top: -20px;
+	font-size: 0.8rem;
+}
 form label{
 	position: absolute;
 	top: 50%;
@@ -83,7 +83,7 @@ form input:focus ~ label{
 form p{
 	text-align: right;
 	margin-bottom: 1.5rem;
-}	
+}
 form p a{
 	font-size: 1.0rem;
 	font-weight: 500;
