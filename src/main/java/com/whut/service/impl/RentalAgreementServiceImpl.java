@@ -12,6 +12,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
+import java.util.Map;
 
 public class RentalAgreementServiceImpl implements RentalAgreementService {
     SqlSessionFactory factory = SqlSessionFactoryUtils.getSqlSessionFactory();
@@ -89,6 +90,18 @@ public class RentalAgreementServiceImpl implements RentalAgreementService {
         } finally {
             sqlSession.close();
         }
+    }
+
+    @Override
+    public List<Map<String, String>> selectRentalAgeementByOutlet() {
+        SqlSession sqlSession = factory.openSession();
+        RentalAgreementMapper rentalAgreementMapper = sqlSession.getMapper(RentalAgreementMapper.class);
+
+        List<Map<String, String>> agreement = rentalAgreementMapper.selectRentalAgreementByOutlet();
+
+        sqlSession.close();
+
+        return agreement;
     }
 
     /**
