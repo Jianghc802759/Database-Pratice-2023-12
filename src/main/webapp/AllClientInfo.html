@@ -574,37 +574,38 @@
 			})
 			  .then(response => response.json())
 			  .then(data => {
-				console.log(data);
-				var container = document.getElementById(containerId);
-				container.textContent = ''; // 清除可能存在的任何旧数据
-
-				// 创建一个表格来存储数据
-				var table = document.createElement('table');
-
-				// 在数据对象中为每个键值对创建一个表格行
-				data.forEach(item => {
-				  var row = document.createElement('tr');
-
-				  var cellKey = document.createElement('td');
-				  cellKey.textContent = 'clientStreet';
-				  row.appendChild(cellKey);
-
-				  var cellValue = document.createElement('td');
-				  cellValue.textContent = item.clientStreet;
-				  row.appendChild(cellValue);
-
-				  var cellKey2 = document.createElement('td');
-				  cellKey2.textContent = 'clientNum';
-				  row.appendChild(cellKey2);
-
-				  var cellValue2 = document.createElement('td');
-				  cellValue2.textContent = item.clientNum;
-				  row.appendChild(cellValue2);
-
-				  table.appendChild(row);
-				});
-
-				container.appendChild(table);
+				 console.log(data);
+				        var container = document.getElementById(containerId);
+				        container.textContent = ''; // 清除可能存在的任何旧数据
+				
+				        // 创建一个表格来存储数据
+				        var table = document.createElement('table');
+				
+				        if (data.length > 0) {
+				          var keys = Object.keys(data[0]);
+				
+				          // 创建表头
+				          var headerRow = document.createElement('tr');
+				          keys.forEach(key => {
+				            var headerCell = document.createElement('th');
+				            headerCell.textContent = key;
+				            headerRow.appendChild(headerCell);
+				          });
+				          table.appendChild(headerRow);
+				
+				          // 创建数据行
+				          data.forEach(item => {
+				            var row = document.createElement('tr');
+				            keys.forEach(key => {
+				              var cell = document.createElement('td');
+				              cell.textContent = item[key];
+				              row.appendChild(cell);
+				            });
+				            table.appendChild(row);
+				          });
+				        }
+				
+				        container.appendChild(table);
 			  })
 			  .catch((error) => {
 				console.error('Error:', error);
