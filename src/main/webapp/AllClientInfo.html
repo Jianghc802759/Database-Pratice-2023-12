@@ -575,34 +575,34 @@
 			})
 			  .then(response => response.json())
 			  .then(data => {
-				 console.log(data)
-				// 创建一个表格来存储数据
-				var table = document.createElement('table');
-
-				// 在数据对象中为每个键值对创建一个表格行
-				for (var key in data) {
-				  // 创建一个表格行和两个单元格
-				  var row = document.createElement('tr');
-				  var cellKey = document.createElement('td');
-				  var cellValue = document.createElement('td');
-
-				  // 将键和值放入相应的单元格并将单元格添加到行
-				  cellKey.textContent = key;
-				  cellValue.textContent = data[key];
-				  row.appendChild(cellKey);
-				  row.appendChild(cellValue);
-
-				  // 将行添加到表格
-				  table.appendChild(row);
-				}
-
-				// 将表格放入指定的容器中
-				var container = document.getElementById(containerId);
-				container.textContent = ''; // 清除可能存在的任何旧数据
-				container.appendChild(table);
-			  })
-			  .catch((error) => {
-				console.error('Error:', error);
+				console.log(data);
+				        var container = document.getElementById(containerId);
+				        container.textContent = ''; // 清除可能存在的任何旧数据
+				
+				        // 创建一个表格来存储数据
+				        var table = document.createElement('table');
+				
+				        // 在数据对象中为每个键值对创建一个表格行
+				        data.forEach(item => {
+				          var row = document.createElement('tr');
+				
+				          var cellKey = document.createElement('td');
+				          cellKey.textContent = 'clientStreet';
+				          row.appendChild(cellKey);
+				
+				          var cellValue = document.createElement('td');
+				          cellValue.textContent = item.clientStreet;
+				          row.appendChild(cellValue);
+				
+				          var cellKey2 = document.createElement('td');
+				          cellKey2.textContent = 'clientNum';
+				          row.appendChild(cellKey2);
+				
+				          var cellValue2 = document.createElement('td');
+				          cellValue2.textContent = item.clientNum;
+				          row.appendChild(cellValue2);
+				
+				          table.appendChild(row);
 			  });
 		  }
 
