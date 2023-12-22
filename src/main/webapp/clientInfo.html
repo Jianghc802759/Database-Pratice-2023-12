@@ -41,106 +41,100 @@
 
 	// Handle submit button click event
 
-	const submitBtn = document.getElementById('submitBtn');
+	const clientForm = document.getElementById('clientForm');
 	
-
-	submitBtn.addEventListener('click', () => {
-		const updatedClientData = {
-			clientNo: document.getElementById('clientNo').value,
-			clientName: document.getElementById('clientName').value,
-			clientStreet: document.getElementById('clientStreet').value,
-			clientCity: document.getElementById('clientCity').value,
-			clientState: document.getElementById('clientState').value,
-			clientZipCode: document.getElementById('clientZipCode').value,
-			clientTelNo: document.getElementById('clientTelNo').value,
-			clientFaxNo: document.getElementById('clientFaxNo').value,
-			clientWebAddress: document.getElementById('clientWebAddress').value,
-			contactName: document.getElementById('contactName').value,
-			contactTelNo: document.getElementById('contactTelNo').value,
-			contactFaxNo: document.getElementById('contactFaxNo').value,
-			contactEmailAddress: document.getElementById('contactEmailAddress').value,
-		};
-
-		// Send updated data to backend
-		fetch('/CarsRental/client/updateClient', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(updatedClientData),
-		})
-		.then(response => {
-			if (response.ok) {
-				console.log('成功更新客户信息');
-			} else {
-				console.error('更新客户信息时出错');
-			}
-		})
-		.catch(error => console.error('Error:', error));
+	clientForm.addEventListener('submit', (event) => {
+	    event.preventDefault(); // 阻止表单的默认提交行为
+	
+	    // 收集表单数据
+	    const updatedClientData = {
+	        // 获取各个输入框的值
+	    };
+	
+	    // 发送更新数据到后端
+	    fetch('/CarsRental/client/updateClient', {
+	        method: 'POST',
+	        headers: {
+	            'Content-Type': 'application/json',
+	        },
+	        body: JSON.stringify(updatedClientData),
+	    })
+	    .then(response => {
+	        if (response.ok) {
+	            alert('成功更新客户信息');
+	            location.reload();  // 刷新页面
+	        } else {
+	            alert('更新客户信息时出错');
+	        }
+	    })
+	    .catch(error => console.error('Error:', error));
 	});
 </script>
 <body>
     <div class="container">
         <h1>Client Information</h1>
+		<form id="clientForm">
         <div class="client-info">
             <div class="info-item">
                 <label>Client No:</label> 
-                <input id="clientNo" type="text" style="border:none; border-radius:25px; outline:none;  background-color: transparent; font-size:1.2rem;" readonly>
+                <input id="clientNo" type="text"  readonly>
             </div>
             <div class="info-item">
                 <label>Client Name:</label> 
-                <input id="clientName" type="text" style="border:none; border-radius:25px; outline:none;  background-color: transparent; font-size:1.2rem;">
+                <input id="clientName" type="text" >
             </div>
             <div class="info-item">
                 <label>Client Street:</label> 
-                <input id="clientStreet" type="text" style="border:none; border-radius:25px; outline:none;  background-color: transparent; font-size:1.2rem;">
+                <input id="clientStreet" type="text" >
             </div>
 			<div class="info-item">
 			    <label>Client City:</label> 
-			    <input id="clientCity" type="text" style="border:none; border-radius:25px; outline:none;  background-color: transparent; font-size:1.2rem;">
+			    <input id="clientCity" type="text" >
 			</div>
 			<div class="info-item">
 			    <label>Client State:</label> 
-			    <input id="clientState" type="text" style="border:none; border-radius:25px; outline:none;  background-color: transparent; font-size:1.2rem;">
+			    <input id="clientState" type="text" >
 			</div>
 			<div class="info-item">
 			    <label>Client ZipCode:</label> 
-			    <input id="clientZipCode" type="text" style="border:none; border-radius:25px; outline:none;  background-color: transparent; font-size:1.2rem;">
+			    <input id="clientZipCode" type="text" >
 			</div>
 			<div class="info-item">
 			    <label>Client TelNo:</label> 
-			    <input id="clientTelNo" type="text" style="border:none; border-radius:25px; outline:none;  background-color: transparent; font-size:1.2rem;">
+			    <input id="clientTelNo" type="text" >
 			</div>
 			<div class="info-item">
 			    <label>Client FaxNo:</label> 
-			    <input id="clientFaxNo" type="text" style="border:none; border-radius:25px; outline:none;  background-color: transparent; font-size:1.2rem;">
+			    <input id="clientFaxNo" type="text" >
 			</div>
 			<div class="info-item">
 			    <label>Client WebAddress:</label> 
-			    <input id="clientWebAddress" type="text" style="border:none; border-radius:25px; outline:none;  background-color: transparent; font-size:1.2rem;">
+			    <input id="clientWebAddress" type="text" >
 			</div>
 			<div class="info-item">
 			    <label>Contact Name:</label> 
-			    <input id="contactName" type="text" style="border:none; border-radius:25px; outline:none;  background-color: transparent; font-size:1.2rem;">
+			    <input id="contactName" type="text" >
 			</div>
 			<div class="info-item">
 			    <label>Contact TelNo:</label> 
-			    <input id="contactTelNo" type="text" style="border:none; border-radius:25px; outline:none;  background-color: transparent; font-size:1.2rem;">
+			    <input id="contactTelNo" type="text" >
 			</div>
 			<div class="info-item">
 			    <label>Contact FaxNo:</label> 
-			    <input id="contactFaxNo" type="text" style="border:none; border-radius:25px; outline:none;  background-color: transparent; font-size:1.2rem;">
+			    <input id="contactFaxNo" type="text" >
 			</div>
 			<div class="info-item">
 			    <label>Contact EmailAddress:</label> 
-			    <input id="contactEmailAddress" type="text" style="border:none; border-radius:25px; outline:none;  background-color: transparent; font-size:1.2rem;">
+			    <input id="contactEmailAddress" type="text">
 			</div>
-			<div class="info-item">
-			    <div class="centered">
-			      <button id="submitBtn" type="button">修改</button>
-			    </div>
-		 </div>
+
+
         </div>
+		
+		<div class="centered">
+		  <button id="submitBtn" type="button">修改</button>
+		</div>
+		  </form>
     </div>
 
 </body>
