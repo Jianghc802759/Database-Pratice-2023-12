@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/clientInfo.css" />
+  <title>Client Information</title>
+  <style>
+    body {
+      background-image: url(imgs/log.svg);
+      background-position: left center;
+      background-size: cover;
+    }
+    .info-item {
+      margin-bottom: 10px;
+    }
+  </style>
+
+</head>
+<script>
+  // Fetch initial data from backend
+  fetch('/CarsRental/client/selectEmployee')
+          .then(response => response.json())
+          .then(data => {
+            // Fill the data into the input fields
+            document.getElementById('employeeNo').value = data.employeeNo;
+            document.getElementById('title').value = data.title;
+            document.getElementById('firstName').value = data.firstName;
+            document.getElementById('middleName').value = data.middleName;
+            document.getElementById('lastName').value = data.lastName;
+            document.getElementById('address').value = data.address;
+            document.getElementById('workTelExt').value = data.workTelExt;
+            document.getElementById('homeTelNo').value = data.homeTelNo;
+            document.getElementById('empEmailAddress').value = data.empEmailAddress;
+            document.getElementById('socialSecurityNumber').value = data.socialSecurityNumber;
+            document.getElementById('dOB').value = data.dOB;
+            document.getElementById('position').value = data.position;
+            document.getElementById('gender').value = data.gender;
+            document.getElementById('salary').value = data.salary;
+            document.getElementById('dateStarted').value = data.dateStarted;
+            document.getElementById('outletNo').value = data.outletNo;
+          })
+          .catch(error => console.error('Error fetching data:', error));
+
+  // Handle submit button click event
+
+  // 在DOM加载完成后绑定事件监听
+  document.addEventListener('DOMContentLoaded', function() {
+    // 获取提交按钮
+    const submitBtn = document.getElementById('submitBtn');
+
+    // 添加点击事件监听
+    submitBtn.addEventListener('click', function(event) {
+      event.preventDefault(); // 阻止表单的默认提交行为
+
+      // 收集表单数据
+      const updatedEmployeeData = {
+        employeeNo: document.getElementById('employeeNo').value,
+        title: document.getElementById('title').value,
+        firstName: document.getElementById('firstName').value,
+        middleName: document.getElementById('middleName').value,
+        lastName: document.getElementById('lastName').value,
+        address: document.getElementById('address').value,
+        workTelExt: document.getElementById('workTelExt').value,
+        homeTelNo: document.getElementById('homeTelNo').value,
+        empEmailAddress: document.getElementById('empEmailAddress').value,
+        socialSecurityNumber: document.getElementById('socialSecurityNumber').value,
+        dOB: document.getElementById('dOB').value,
+        position: document.getElementById('position').value,
+        gender: document.getElementById('gender').value,
+        salary: document.getElementById('salary').value,
+        dateStarted: document.getElementById('dateStarted').value,
+        outletNo: document.getElementById('outletNo').value
+      };
+      console.log(updatedEmployeeData)
+
+      // 发送更新数据到后端
+      fetch('/CarsRental/employee/updateEmployee', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedClientData),
+      })
+              .then(response => {
+                if (response.success) {
+                  alert('成功更新客户信息');
+
+                } else {
+                  alert('更新客户信息时出错');
+                }
+              })
+              .catch(error => console.error('Error:', error));
+    });
+  });
+
+  // 更新页面内容函数
+  function updatePageContent(data) {
+    document.getElementById('employeeNo').value = data.employeeNo;
+    document.getElementById('title').value = data.title;
+    document.getElementById('firstName').value = data.firstName;
+    document.getElementById('middleName').value = data.middleName;
+    document.getElementById('lastName').value = data.lastName;
+    document.getElementById('address').value = data.address;
+    document.getElementById('workTelExt').value = data.workTelExt;
+    document.getElementById('homeTelNo').value = data.homeTelNo;
+    document.getElementById('empEmailAddress').value = data.empEmailAddress;
+    document.getElementById('socialSecurityNumber').value = data.socialSecurityNumber;
+    document.getElementById('dOB').value = data.dOB; // Assuming it's in an appropriate format
+    document.getElementById('position').value = data.position;
+    document.getElementById('gender').value = data.gender;
+    document.getElementById('salary').value = data.salary; // Assuming it's a number
+    document.getElementById('dateStarted').value = data.dateStarted; // Assuming it's in an appropriate format
+    document.getElementById('outletNo').value = data.outletNo; // Assuming it's an integer
+
+  }
+</script>
+<body>
+<div class="container">
+  <h1>Client Information</h1>
+  <form id="clientForm">
+    <div class="client-info">
+      <div class="info-item">
+        <label>Employee No:</label>
+        <input id="employeeNo" type="text"  readonly>
+      </div>
+      <div class="info-item">
+        <label>Title:</label>
+        <input id="title" type="text" >
+      </div>
+      <div class="info-item">
+        <label>FirstName:</label>
+        <input id="firstName" type="text" >
+      </div>
+      <div class="info-item">
+        <label>MiddleName:</label>
+        <input id="middleName" type="text" >
+      </div>
+      <div class="info-item">
+        <label>LastName:</label>
+        <input id="lastName" type="text" >
+      </div>
+      <div class="info-item">
+        <label>Address:</label>
+        <input id="address" type="text" >
+      </div>
+      <div class="info-item">
+        <label>WorkTelExt:</label>
+        <input id="workTelExt" type="text" >
+      </div>
+      <div class="info-item">
+        <label>HomeTelNo:</label>
+        <input id="homeTelNo" type="text" >
+      </div>
+      <div class="info-item">
+        <label>EmpEmailAddress:</label>
+        <input id="empEmailAddress" type="text" >
+      </div>
+      <div class="info-item">
+        <label>SocialSecurityNumber:</label>
+        <input id="socialSecurityNumber" type="text" >
+      </div>
+      <div class="info-item">
+        <label>DOB:</label>
+        <input id="dOB" type="text" >
+      </div>
+      <div class="info-item">
+        <label>Position:</label>
+        <input id="position" type="text" >
+      </div>
+      <div class="info-item">
+        <label>Gender:</label>
+        <input id="gender" type="text">
+      </div>
+      <div class="info-item">
+        <label>Salary:</label>
+        <input id="salary" type="text">
+      </div>
+      <div class="info-item">
+        <label>DateStarted:</label>
+        <input id="dateStarted" type="text">
+      </div>
+      <div class="info-item">
+        <label>OutletNo:</label>
+        <input id="outletNo" type="text">
+      </div>
+
+    </div>
+
+    <div class="centered">
+      <button id="submitBtn" type="button">修改</button>
+    </div>
+  </form>
+</div>
+
+</body>
+</html>
