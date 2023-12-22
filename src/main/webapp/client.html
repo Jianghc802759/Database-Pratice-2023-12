@@ -9,66 +9,79 @@
 	</head>
 <style>
 	 body {
-					background-image: url(imgs/log.svg);
-
+					background-image: url(img/log.svg);
+					
 					background-position: left center;
 					background-size: cover;
 	 }
+
+	 
+
 </style>
 <script>
-
 		const inputs = document.querySelectorAll('.input_group input');
-
+		
 		inputs.forEach(function(input) {
-			input.addEventListener('input', function() {
-				const label = input.nextElementSibling;
-
-				if (input.value.trim() !== '') {
-					label.classList.add('filled');
-				} else {
-					label.classList.remove('filled');
-				}
-			});
+				input.addEventListener('input', function() {
+					const label = input.nextElementSibling;
+					
+					if (input.value.trim() !== '') {
+						label.classList.add('filled');
+					} else {
+						label.classList.remove('filled');
+					}
+				});
 		});
-
 		const form = document.querySelector('#myForm');
 
 		form.addEventListener('submit', function(event) {
-			event.preventDefault(); // Prevent form submission
-
-			// Get form data
-			const formData = new FormData(form);
-			// Send form data to the backend
-			fetch('/CarsRental/client/clientLogin', {
-				method: 'POST',
-				body: formData
-			})
-			.then(response => {
-				if (response.ok) {
-					// If successful, redirect to another page
-					window.location.href = 'clientInfo.html'; // Replace with your page URL
-				} else {
-					throw new Error('Failed to sign in');
-				}
-			})
-			.catch(error => console.error('Error:', error));
+		    event.preventDefault(); // 阻止表单默认提交行为
+		
+		    // 获取表单数据
+		    const formData = new FormData(form);
+		
+		    // 转换为 JSON 对象
+		    const jsonObject = {};
+		    for (const [key, value] of formData.entries()) {
+		        jsonObject[key] = value;
+		    }
+			console.log(jsonObject)
+		
+		    // 发送数据给后端
+		    fetch('your_backend_endpoint', {
+		        method: 'POST',
+		        headers: {
+		            'Content-Type': 'application/json'
+		        },
+		        body: JSON.stringify(jsonObject)
+		    })
+		    .then(response => {
+		        if (response.ok) {
+		            // 如果成功，重定向到另一页
+		            window.location.href = 'clientInfo.html'; //请替换为您的页面地址
+		        } else {
+		            alert('登录失败');
+		        }
+		    })
+		    .catch(error => console.error('错误:', error));
 		});
+
 	</script>
 <body>
 <div class="container">
 	<div class="container_right">
 		<div class="content">
-			<img class="logo" src="imgs/vehicle.png" alt="logo" />
+			<img class="logo" src="img/汽车.png" alt="logo" />
 			<p class="header">Welcome to cars rental!!!</p>
 			
 			<form id="myForm">
 				<div class="input_group">
-					<input type="text" id="clientNo" name="clientNo" required>
-					<label for="clientNo">Client</label>
+					<input type="text" id="username" name="username" required>
+					<label for="username">username</label>
 				</div>
 				<div class="input_group">
 					<input type="password" id="password" name="password" required>
-					<label for="password">Password</label>
+					<label for="password">password</label>
 				</div>
 				
 				<button type="submit">Sign In</button>
