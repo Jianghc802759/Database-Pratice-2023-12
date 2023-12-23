@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>门店信息</title>
+  <style>
+    /* 用于美化页面样式的 CSS 代码 */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f4f4;
+      margin: 20px;
+    }
+
+    h1 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      background-color: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    th,
+    td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>
+    <label style="margin-right: 50px;"></label>
+    <label style="color: #007bff;">门店技工</label>
+  </h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th>员工编号</th>
+        <th>名字</th>
+        <th>性别</th>
+        <th>职位</th>
+        <th>开始工作日期</th>
+        <th>工作电话分机</th>
+      </tr>
+    </thead>
+    <tbody id="employeeTableBody"></tbody>
+  </table>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // 使用经理接口获取数据
+      fetch('/CarsRental/employee/selectEmployeeByManager')
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error('请求接口时遇到错误');
+          }
+        })
+        .then(data => {
+          // 处理从接口返回的数据
+          console.log(data);
+
+          // 调用显示技工信息的函数
+          displayEmployeeInfo(data);
+        })
+        .catch(error => {
+          console.log('请求接口时遇到错误:', error);
+          // 在这里处理错误，例如显示错误提示或进行适当的错误处理
+        });
+    });
+
+    function displayEmployeeInfo(employees) {
+      const employeeTableBody = document.getElementById('employeeTableBody');
+      employeeTableBody.innerHTML = '';
+
+      employees.forEach(employee => {
+        const row = document.createElement('tr');
+
+        const employeeNoCell = createTableCell(employee.employeeNo);
+        const nameCell = createTableCell(`${employee.firstName} ${employee.middleName} ${employee.lastName}`);
+        const genderCell = createTableCell(employee.gender);
+        const positionCell = createTableCell(employee.position);
+        const dateStartedCell = createTableCell(employee.dateStarted);
+        const workTelExtCell = createTableCell(employee.workTelExt);
+
+        row.appendChild(employeeNoCell);
+        row.appendChild(nameCell);
+        row.appendChild(genderCell);
+        row.appendChild(positionCell);
+        row.appendChild(dateStartedCell);
+        row.appendChild(workTelExtCell);
+
+        employeeTableBody.appendChild(row);
+      });
+    }
+
+    function createTableCell(value) {
+      const cell = document.createElement('td');
+      cell.textContent = value;
+      return cell;
+    }
+  </script>
+</body>
+
+</html>
