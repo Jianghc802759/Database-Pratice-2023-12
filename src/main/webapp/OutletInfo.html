@@ -1,0 +1,113 @@
+<!-- OutletInfo.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>门店信息</title>
+  <style>
+    /* 用于美化页面样式的 CSS 代码 */
+    body {
+      font-family: Arial, sans-serif;
+    }
+    
+    h1 {
+      color: #333;
+	  text-align: center;
+	}
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    
+    th, td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+  <h1>门店信息</h1>
+  
+  <table>
+    <thead>
+      <tr>
+        <th>车辆牌照号</th>
+        <th>车辆制造商</th>
+        <th>车辆型号</th>
+        <th>车辆颜色</th>
+        <th>车辆门数</th>
+        <th>租用状态</th>
+        <th>维修状态</th>
+        <th>车辆容量</th>
+        <th>租赁费率</th>
+        <th>所属门店编号</th>
+      </tr>
+    </thead>
+    <tbody id="vehicleTableBody"></tbody>
+  </table>
+  
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const urlParams = new URLSearchParams(window.location.search);
+      const vehicleData = urlParams.get('vehicles');
+      
+      if (vehicleData) {
+        const vehicles = JSON.parse(vehicleData);
+        displayVehicleInfo(vehicles);
+      } else {
+        displayNoVehicleInfo();
+      }
+    });
+    
+    function displayVehicleInfo(vehicles) {
+      const vehicleTableBody = document.getElementById('vehicleTableBody');
+      vehicleTableBody.innerHTML = '';
+      
+      vehicles.forEach(vehicle => {
+        const row = document.createElement('tr');
+        
+        const vehLicenseNoCell = createTableCell(vehicle.vehLicenseNo);
+        const vehicleMakeCell = createTableCell(vehicle.vehicleMake);
+        const vehicleModelCell = createTableCell(vehicle.vehicleModel);
+        const colorCell = createTableCell(vehicle.color);
+        const noDoorsCell = createTableCell(vehicle.noDoors);
+        const rentalStatusCell = createTableCell(vehicle.rentalStatus);
+        const maintenanceStatusCell = createTableCell(vehicle.maintenanceStatus);
+        const capacityCell = createTableCell(vehicle.capacity);
+        const hireRateCell = createTableCell(vehicle.hireRate);
+        const outletNoCell = createTableCell(vehicle.outletNo);
+        
+        row.appendChild(vehLicenseNoCell);
+        row.appendChild(vehicleMakeCell);
+        row.appendChild(vehicleModelCell);
+        row.appendChild(colorCell);
+        row.appendChild(noDoorsCell);
+        row.appendChild(rentalStatusCell);
+        row.appendChild(maintenanceStatusCell);
+        row.appendChild(capacityCell);
+        row.appendChild(hireRateCell);
+        row.appendChild(outletNoCell);
+        
+        vehicleTableBody.appendChild(row);
+      });
+    }
+    
+    function createTableCell(value) {
+      const cell = document.createElement('td');
+      cell.textContent = value;
+      return cell;
+    }
+    
+    function displayNoVehicleInfo() {
+      const vehicleTableBody = document.getElementById('vehicleTableBody');
+      vehicleTableBody.innerHTML = '<tr><td colspan="10">未找到相关车辆信息。</td></tr>';
+    }
+  </script>
+</body>
+</html>
