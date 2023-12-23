@@ -20,56 +20,73 @@
 </style>
 <script>
 		document.addEventListener('DOMContentLoaded', function() {
-		    const inputs = document.querySelectorAll('.input_group input');
-		    inputs.forEach(function(input) {
-		        input.addEventListener('input', function() {
-		            const label = input.nextElementSibling;
-		            if (input.value.trim() !== '') {
-		                label.classList.add('filled');
-		            } else {
-		                label.classList.remove('filled');
-		            }
-		        });
-		    });
-		    
-		    const form = document.querySelector('#myForm');
-		    form.addEventListener('submit', function(event) {
-		        event.preventDefault(); // 阻止表单默认提交行为
-		        // 获取表单数据
-		        const formData = new FormData(form);
-		        // 转换为 JSON 对象
-		        const jsonObject = {};
-		        for (const [key, value] of formData.entries()) {
-		            jsonObject[key] = value;
-		        }
+			const inputs = document.querySelectorAll('.input_group input');
+			inputs.forEach(function(input) {
+				input.addEventListener('input', function() {
+					const label = input.nextElementSibling;
+					if (input.value.trim() !== '') {
+						label.classList.add('filled');
+					} else {
+						label.classList.remove('filled');
+					}
+				});
+			});
 
-		        const myJson = JSON.stringify(jsonObject);
+			const form = document.querySelector('#myForm');
+			form.addEventListener('submit', function(event) {
+				event.preventDefault(); // 阻止表单默认提交行为
+				// 获取表单数据
+				const formData = new FormData(form);
+				// 转换为 JSON 对象
+				const jsonObject = {};
+				for (const [key, value] of formData.entries()) {
+					jsonObject[key] = value;
+				}
 
-		        // 发送数据给后端
-		        fetch('/CarsRental/client/clientLogin', {
-		            method: 'POST',
-		            headers: {
-		                'Content-Type': 'application/json'
-		            },
-		            body: JSON.stringify(jsonObject)
-		        })
-		        .then(response => {
-		            if (response.ok) {
-		                            // 如果成功，重定向到相应的页面
-		                            const username = jsonObject.username;
-		                            if (username.startsWith('C')) {
-		                                window.location.href = 'EmployeeInfo.html'; // 替换为客户界面的页面地址
-		                            } else if (username.startsWith('E')) {
-		                                window.location.href = 'ClientInfo.html'; // 替换为员工界面的页面地址
-		                            } else {
-		                                alert('无效的账号');
-		                            }
-		                        } else {
-		                            alert('登录失败');
-		                        }
-		        })
-		        .catch(error => console.error('错误:', error));
-		    });
+				const myJson = JSON.stringify(jsonObject);
+
+				// 判断账号前缀
+				const username = jsonObject.username;
+				if (username.startsWith('C')) {
+					// 调用客户接口
+					fetch('/CarsRental/client/clientLogin', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						body: JSON.stringify(jsonObject)
+					})
+					.then(response => {
+						if (response.ok) {
+							// 如果成功，重定向到客户界面
+							window.location.href = 'ClientInfo.html'; // 替换为客户界面的页面地址
+						} else {
+							alert('登录失败');
+						}
+					})
+					.catch(error => console.error('错误:', error));
+				} else if (username.startsWith('E')) {
+					// 调用员工接口
+					fetch('/CarsRental/employee/employeeLogin', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						body: JSON.stringify(jsonObject)
+					})
+					.then(response => {
+						if (response.ok) {
+							// 如果成功，重定向到员工界面
+							window.location.href = 'EmployeeInfo.html'; // 替换为员工界面的页面地址
+						} else {
+							alert('登录失败');
+						}
+					})
+					.catch(error => console.error('错误:', error));
+				} else {
+					alert('无效的账号');
+				}
+			});
 		});
 
 	</script>
