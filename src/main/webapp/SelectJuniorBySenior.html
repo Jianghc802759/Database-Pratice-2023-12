@@ -14,6 +14,7 @@
     h1 {
       color: #333;
       text-align: center;
+      margin-bottom: 20px;
     }
 
     table {
@@ -38,9 +39,9 @@
 </head>
 
 <body>
-  <h1 style="text-align: center;">
+  <h1>
     <label style="margin-right: 50px;"></label>
-    <label style="color: #007bff;">门店普通技工</label>
+    <label style="color: #007bff;">门 店 普 通 技 工</label>
   </h1>
 
   <table>
@@ -48,18 +49,21 @@
       <tr>
         <th>员工编号</th>
         <th>名字</th>
-        <th>性别</th>
-        <th>开始工作日期</th>
+        <th>中间名</th>
+        <th>姓氏</th>
+		<th>性别</th>
+		<!-- <th>职位</th> -->
+		<th>开始工作日期</th>
         <th>工作电话分机</th>
       </tr>
     </thead>
-    <tbody id="juniorEmployeeTableBody"></tbody>
+    <tbody id="employeeTableBody"></tbody>
   </table>
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      // 使用普通技工接口获取数据
-      fetch('/CarsRental/employee/selectJuniorBySenior')
+      // 使用经理接口获取数据
+      fetch('/CarsRental/employee/selectEmployeeByManager')
         .then(response => {
           if (response.ok) {
             return response.json();
@@ -71,8 +75,8 @@
           // 处理从接口返回的数据
           console.log(data);
 
-          // 调用显示普通技工信息的函数
-          displayJuniorEmployeeInfo(data);
+          // 调用显示技工信息的函数
+          displayEmployeeInfo(data);
         })
         .catch(error => {
           console.log('请求接口时遇到错误:', error);
@@ -80,26 +84,33 @@
         });
     });
 
-    function displayJuniorEmployeeInfo(juniorEmployees) {
-      const juniorEmployeeTableBody = document.getElementById('juniorEmployeeTableBody');
-      juniorEmployeeTableBody.innerHTML = '';
+    function displayEmployeeInfo(employees) {
+      const employeeTableBody = document.getElementById('employeeTableBody');
+      employeeTableBody.innerHTML = '';
 
-      juniorEmployees.forEach(employee => {
+      employees.forEach(employee => {
         const row = document.createElement('tr');
 
         const employeeNoCell = createTableCell(employee.employeeNo);
-        const nameCell = createTableCell(`${employee.firstName} ${employee.middleName} ${employee.lastName}`);
-        const genderCell = createTableCell(employee.gender);
-        const dateStartedCell = createTableCell(employee.dateStarted);
+        const firstNameCell = createTableCell(employee.firstName);
+        const middleNameCell = createTableCell(employee.middleName);
+        const lastNameCell = createTableCell(employee.lastName);
+		// const positionCell = createTableCell(employee.position);
+		const genderCell = createTableCell(employee.gender);
+		const dateStartedCell = createTableCell(employee.dateStarted);
         const workTelExtCell = createTableCell(employee.workTelExt);
+        
 
         row.appendChild(employeeNoCell);
-        row.appendChild(nameCell);
-        row.appendChild(genderCell);
-        row.appendChild(dateStartedCell);
+        row.appendChild(firstNameCell);
+        row.appendChild(middleNameCell);
+        row.appendChild(lastNameCell);
+		// row.appendChild(positionCell);
+		row.appendChild(genderCell);
+		row.appendChild(dateStartedCell);
         row.appendChild(workTelExtCell);
 
-        juniorEmployeeTableBody.appendChild(row);
+        employeeTableBody.appendChild(row);
       });
     }
 

@@ -41,7 +41,7 @@
 <body>
   <h1>
     <label style="margin-right: 50px;"></label>
-    <label style="color: #007bff;">门店技工</label>
+    <label style="color: #007bff;">门 店 技 工</label>
   </h1>
 
   <table>
@@ -49,6 +49,8 @@
       <tr>
         <th>员工编号</th>
         <th>名字</th>
+        <th>中间名</th>
+        <th>姓氏</th>
         <th>性别</th>
         <th>职位</th>
         <th>开始工作日期</th>
@@ -90,14 +92,18 @@
         const row = document.createElement('tr');
 
         const employeeNoCell = createTableCell(employee.employeeNo);
-        const nameCell = createTableCell(`${employee.firstName} ${employee.middleName} ${employee.lastName}`);
+        const lastNameCell = createTableCell(employee.lastName);
+        const middleNameCell = createTableCell(employee.middleName);
+        const firstNameCell = createTableCell(employee.firstName);
         const genderCell = createTableCell(employee.gender);
         const positionCell = createTableCell(employee.position);
         const dateStartedCell = createTableCell(employee.dateStarted);
         const workTelExtCell = createTableCell(employee.workTelExt);
 
         row.appendChild(employeeNoCell);
-        row.appendChild(nameCell);
+        row.appendChild(lastNameCell);
+        row.appendChild(middleNameCell);
+        row.appendChild(firstNameCell);
         row.appendChild(genderCell);
         row.appendChild(positionCell);
         row.appendChild(dateStartedCell);
