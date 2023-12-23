@@ -10,58 +10,64 @@
 </head>
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    var outletForm = document.getElementById('outletForm');
-    var outletDataPlaceholder = document.getElementById('outletDataPlaceholder');
+  var outletForm = document.getElementById('outletForm');
+  var outletDataPlaceholder = document.getElementById('outletDataPlaceholder');
 
-    outletForm.addEventListener('submit', function (event) {
-        event.preventDefault();
-        submitOutletForm();
-    });
-
-    // 在页面加载时，将占位元素的内容设置为表格
-    outletDataPlaceholder.innerHTML = document.getElementById('outletInfo').outerHTML;
+  outletForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+    submitOutletForm();
+  });
 });
 
-		function generateOutletOptions(filteredData) {
-		  var selectOutlet = document.getElementById('selectOutlet');
-		  selectOutlet.innerHTML = '<option value="">请选择门店</option>'; // 清空所有选项
+function generateOutletOptions(filteredData) {
+  var selectOutlet = document.getElementById('selectOutlet');
+  selectOutlet.innerHTML = '<option value="">请选择门店</option>'; // 清空所有选项
 
-		  // 生成门店选项
-		  for (let i = 0; i < filteredData.length; i++) {
-			var option = document.createElement('option');
-			option.value = filteredData[i].outletNo;
-			option.text = filteredData[i].outletNo;
-			selectOutlet.appendChild(option);
-		  }
-		  var selectOutlet = document.getElementById('selectOutlet');
-		  selectOutlet.style.display = 'table';
-		}
+  // 生成门店选项
+  for (let i = 0; i < filteredData.length; i++) {
+    var option = document.createElement('option');
+    option.value = filteredData[i].outletNo;
+    option.text = filteredData[i].outletNo;
+    selectOutlet.appendChild(option);
+  }
+  selectOutlet.style.display = 'table';
+}
 
+function selectOutlet(outletNo) {
+  console.log('选择的门店编号：', outletNo);
+  
+  // 发送门店编号到后端
+  fetch('/CarsRental/vehicle/selectVehicleToClient', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ outletNo: outletNo })
+  })
+    .then(response => {
+      if (response.ok) {
+        console.log('成功向后端发送门店编号');
+        return response.json();
+      } else {
+        console.log('向后端发送门店编号时遇到错误');
+        throw new Error('向后端发送门店编号时遇到错误');
+      }
+    })
+    .then(data => {
+      console.log('所选择门店的汽车信息:', data);
+      // 将车辆信息封装成 JSON 对象，用于传递给另一个页面
+      const vehicleData = { vehicles: data };
 
-		function selectOutlet() {
-		  var selectedOutletNo = document.getElementById('selectOutlet').value;
-		  console.log('选择的门店编号：', selectedOutletNo);
-		  
-		  // 发送门店编号到后端
-		    fetch('/CarsRental/vehicle/selectVehicleToClient', {
-		      method: 'POST',
-		      headers: {
-		        'Content-Type': 'application/json'
-		      },
-		      body: JSON.stringify({ outletNo: selectedOutletNo })
-		    })
-		      .then(response => {
-		        if (response.ok) {
-		          console.log('成功向后端发送门店编号');
-		          // 在这里执行您想要的操作
-		        } else {
-		          console.log('向后端发送门店编号时遇到错误');
-		        }
-		      })
-		      .catch(error => {
-		        console.log('向后端发送门店编号时遇到错误:', error);
-		      });
-		}
+      // 将车辆信息作为参数，拼接到 URL 中并进行页面跳转
+      const queryParams = new URLSearchParams(vehicleData).toString();
+      const redirectUrl = 'OutletInfo.html?' + queryParams;
+      window.location.href = redirectUrl;
+    })
+    .catch(error => {
+      console.log('向后端发送门店编号时遇到错误:', error);
+      // 在这里处理错误，例如显示错误提示或进行适当的错误处理
+    });
+}
 
 function submitOutletForm() {
   var outletStreet = document.getElementById('outletStreet').value;
@@ -75,7 +81,7 @@ function submitOutletForm() {
   };
   
   // 发送搜索条件到后端
-  fetch('/CarsRental/outlet/selectOutletByCondition', {
+  fetch('/CarsRental/outlet/selectAllOutlet', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
