@@ -1,78 +1,85 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible"  content="IE=edge"/>
-	<meta name="viewport" content="width=device-width,initial-scale=1.0" />
-	<link rel="stylesheet" href="css/client.css" />
-	<title>Car_Rental</title>
-</head>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible"  content="IE=edge"/>
+		<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+		<link rel="stylesheet" href="css/client.css" />
+		<title>Car_Rental</title>
+	</head>
 <style>
-	body {
-		background-image: url(imgs/log.svg);
+	 body {
+					background-image: url(imgs/log.svg);
+					
+					background-position: left center;
+					background-size: cover;
+	 }
 
-		background-position: left center;
-		background-size: cover;
-	}
-
-
+	 
 
 </style>
 <script>
-	document.addEventListener('DOMContentLoaded', function() {
-		const inputs = document.querySelectorAll('.input_group input');
-		inputs.forEach(function(input) {
-			input.addEventListener('input', function() {
-				const label = input.nextElementSibling;
-				if (input.value.trim() !== '') {
-					label.classList.add('filled');
-				} else {
-					label.classList.remove('filled');
-				}
-			});
+		document.addEventListener('DOMContentLoaded', function() {
+		    const inputs = document.querySelectorAll('.input_group input');
+		    inputs.forEach(function(input) {
+		        input.addEventListener('input', function() {
+		            const label = input.nextElementSibling;
+		            if (input.value.trim() !== '') {
+		                label.classList.add('filled');
+		            } else {
+		                label.classList.remove('filled');
+		            }
+		        });
+		    });
+		    
+		    const form = document.querySelector('#myForm');
+		    form.addEventListener('submit', function(event) {
+		        event.preventDefault(); // 阻止表单默认提交行为
+		        // 获取表单数据
+		        const formData = new FormData(form);
+		        // 转换为 JSON 对象
+		        const jsonObject = {};
+		        for (const [key, value] of formData.entries()) {
+		            jsonObject[key] = value;
+		        }
+
+		        const myJson = JSON.stringify(jsonObject);
+
+		        // 发送数据给后端
+		        fetch('/CarsRental/client/clientLogin', {
+		            method: 'POST',
+		            headers: {
+		                'Content-Type': 'application/json'
+		            },
+		            body: JSON.stringify(jsonObject)
+		        })
+		        .then(response => {
+		            if (response.ok) {
+		                            // 如果成功，重定向到相应的页面
+		                            const username = jsonObject.username;
+		                            if (username.startsWith('C')) {
+		                                window.location.href = 'EmployeeInfo.html'; // 替换为客户界面的页面地址
+		                            } else if (username.startsWith('E')) {
+		                                window.location.href = 'ClientInfo.html'; // 替换为员工界面的页面地址
+		                            } else {
+		                                alert('无效的账号');
+		                            }
+		                        } else {
+		                            alert('登录失败');
+		                        }
+		        })
+		        .catch(error => console.error('错误:', error));
+		    });
 		});
 
-		const form = document.querySelector('#myForm');
-		form.addEventListener('submit', function(event) {
-			event.preventDefault(); // 阻止表单默认提交行为
-			// 获取表单数据
-			const formData = new FormData(form);
-			// 转换为 JSON 对象
-			const jsonObject = {};
-			for (const [key, value] of formData.entries()) {
-				jsonObject[key] = value;
-			}
-
-			const myJson = JSON.stringify(jsonObject);
-
-			// 发送数据给后端
-			fetch('/CarsRental/client/clientLogin', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify(jsonObject)
-			})
-					.then(response => {
-						if (response.ok) {
-							// 如果成功，重定向到另一页
-							window.location.href = 'clientInfo.html'; //请替换为您的页面地址
-						} else {
-							alert('登录失败');
-						}
-					})
-					.catch(error => console.error('错误:', error));
-		});
-	});
-
-</script>
+	</script>
 <body>
 <div class="container">
 	<div class="container_right">
 		<div class="content">
 			<img class="logo" src="imgs/vehicle.png" alt="logo" />
 			<p class="header">Welcome to cars rental!!!</p>
-
+			
 			<form id="myForm">
 				<div class="input_group">
 					<input type="text" id="username" name="username" required>
@@ -82,7 +89,7 @@
 					<input type="password" id="password" name="password" required>
 					<label>password</label>
 				</div>
-
+				
 				<button type="submit">Sign In</button>
 			</form>
 		</div>
