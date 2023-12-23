@@ -47,19 +47,13 @@ function generateOutletOptions(filteredData) {
 		.then(response => {
 		  if (response.ok) {
 			console.log('成功向后端发送门店编号');
-			return response.json();
+			window.location.href='Outlet.html';
 		  } else {
 			console.log('向后端发送门店编号时遇到错误');
 			throw new Error('向后端发送门店编号时遇到错误');
 		  }
 		})
-		.then(data => {
-		  // 处理从后端返回的数据
-		})
-		.catch(error => {
-		  console.log('向后端发送门店编号时遇到错误:', error);
-		  // 在这里处理错误，例如显示错误提示或进行适当的错误处理
-		});
+		
 	}
 
 function submitOutletForm() {
