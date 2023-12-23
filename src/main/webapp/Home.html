@@ -47,13 +47,22 @@ function generateOutletOptions(filteredData) {
 		.then(response => {
 		  if (response.ok) {
 			console.log('成功向后端发送门店编号');
-			window.location.href='Outlet.html';
+			// 获取从后端返回的数据
+			return response.json();
 		  } else {
 			console.log('向后端发送门店编号时遇到错误');
 			throw new Error('向后端发送门店编号时遇到错误');
 		  }
 		})
-		
+		.then(data => {
+		  // 将数据传递到下一个页面
+		  sessionStorage.setItem('outletData', JSON.stringify(data));
+		  // 跳转到下一个页面
+		  window.location.href = 'Outlet.html';
+		})
+		.catch(error => {
+		  console.error(error);
+		});
 	}
 
 function submitOutletForm() {
