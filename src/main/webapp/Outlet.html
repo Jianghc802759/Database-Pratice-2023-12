@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta charset="utf-8" />
   <title>门店信息</title>
   <style>
     /* 用于美化页面样式的 CSS 代码 */
@@ -48,8 +49,7 @@
 	      padding: 20px;
 	      border: 1px solid #888;
 	      width: 60%;
-		  display: flex;
-		  flex-direction: column;
+
 	    }
 		  .modal-content label,
 		  .modal-content input {
@@ -102,42 +102,58 @@
     <h2>租赁信息</h2>
     <form id="leaseInfoForm">
       <!-- 其他字段 -->
-      <label for="dateStart">起租日期:</label>
-      <input type="date" id="dateStart" name="dateStart" required>
+	  <div>
+		  <label for="dateStart">起租日期:</label>
+		  <input type="date" id="dateStart" name="dateStart" required>
+	   </div>
+	    <div>
+	    	<label for="timeStart">起租时间:</label>
+	    	<input type="time" id="timeStart" name="timeStart" required>
+	    </div>
+		<div>
+			<label for="dateReturn">归还日期:</label>
+			<input type="date" id="dateReturn" name="dateReturn" required>
+		</div>
+		<div>
+			<label for="timeReturn">归还时间:</label>
+			<input type="time" id="timeReturn" name="timeReturn" required>
+		</div>
+		<div>
+			<label for="mileageBefore">租赁前里程:</label>
+			<input type="number" id="mileageBefore" name="mileageBefore" readonly>
+		</div>
+		<div>
+			<label for="mileageAfter">租赁后里程:</label>
+			<input type="number" id="mileageAfter" name="mileageAfter" required>
+		</div>
+		<div>
+			<label for="insuranceCoverType">保险类型:</label>
+			<select id="insuranceCoverType" name="insuranceCoverType" required>
+			  <option value="low">low</option>
+			  <option value="middle">middle</option>
+			  <option value="high">high</option>
+			</select>
+		</div>
+		<div>
+			<label for="insurancePremium">保险费用:</label>
+			<input type="number" id="insurancePremium" name="insurancePremium" required>
+		</div>
+		
+		<!-- 需要从后端数据库获取的字段 -->
+		<div>
+			<label for="policyNo">保单编号:</label>
+			<input type="text" id="policyNo" name="policyNo" readonly>
+		</div>
+        <div>
+			<label for="clientNo">客户编号:</label>
+			<input type="number" id="clientNo" name="clientNo" readonly>
+		</div>
+		 <div>
+			 <label for="vehLicenseNo">车辆牌照号:</label>
+			 <input type="text" id="vehLicenseNo" name="vehLicenseNo" readonly>
+		 </div>
 
-      <label for="timeStart">起租时间:</label>
-      <input type="time" id="timeStart" name="timeStart" required>
-
-      <label for="dateReturn">归还日期:</label>
-      <input type="date" id="dateReturn" name="dateReturn" required>
-
-      <label for="timeReturn">归还时间:</label>
-      <input type="time" id="timeReturn" name="timeReturn" required>
-
-	  <label for="mileageBefore">租赁前里程:</label>
-	  <input type="number" id="mileageBefore" name="mileageBefore" readonly>
-      <label for="mileageAfter">租赁后里程:</label>
-      <input type="number" id="mileageAfter" name="mileageAfter" required>
-
-      <label for="insuranceCoverType">保险类型:</label>
-      <select id="insuranceCoverType" name="insuranceCoverType" required>
-        <option value="low">low</option>
-        <option value="middle">middle</option>
-        <option value="high">high</option>
-      </select>
-
-      <label for="insurancePremium">保险费用:</label>
-      <input type="number" id="insurancePremium" name="insurancePremium" required>
-
-      <!-- 需要从后端数据库获取的字段 -->
-      <label for="policyNo">保单编号:</label>
-      <input type="text" id="policyNo" name="policyNo" readonly>
-
-      <label for="clientNo">客户编号:</label>
-      <input type="number" id="clientNo" name="clientNo" readonly>
-
-      <label for="vehLicenseNo">车辆牌照号:</label>
-      <input type="text" id="vehLicenseNo" name="vehLicenseNo" readonly>
+  
 
       <button type="submit">提交</button>
     </form>
@@ -286,33 +302,36 @@
 	      });
 	  });
 	}
-	
-	//保险字段
-	const leaseInfoForm = document.getElementById('leaseInfoForm');
-	const insuranceCoverTypeField = document.getElementById('insuranceCoverType');
-	const insurancePremiumField = document.getElementById('insurancePremium');
-	
-	insuranceCoverTypeField.addEventListener('change', () => {
-	  const selectedOption = insuranceCoverTypeField.value;
-	  let insurancePremium = 0;
-	
-	  switch (selectedOption) {
-	    case 'low':
-	      insurancePremium = 1000;
-	      break;
-	    case 'middle':
-	      insurancePremium = 2000;
-	      break;
-	    case 'high':
-	      insurancePremium = 3000;
-	      break;
-	    default:
-	      insurancePremium = 0;
-	      break;
-	  }
-	
-	  insurancePremiumField.value = insurancePremium;
-	});
+		
+		document.addEventListener('DOMContentLoaded', () => {
+		  const insuranceCoverTypeField = document.getElementById('insuranceCoverType');
+		  const insurancePremiumField = document.getElementById('insurancePremium');
+
+		  insuranceCoverTypeField.addEventListener('change', () => {
+			const selectedOption = insuranceCoverTypeField.value;
+			let insurancePremium = 0;
+
+			switch (selectedOption) {
+			  case 'low':
+				insurancePremium = 1000;
+				break;
+			  case 'middle':
+				insurancePremium = 2000;
+				break;
+			  case 'high':
+				insurancePremium = 3000;
+				break;
+			  default:
+				insurancePremium = 0;
+				break;
+			}
+
+			insurancePremiumField.value = insurancePremium;
+		  });
+
+		  // 初始化保险费用
+		  insurancePremiumField.value = 1000;
+		});
    </script>
 </body>
 </html>
