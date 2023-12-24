@@ -551,62 +551,71 @@
     }
 
 
-    // 获取模态框及其组件
-    var modal = document.getElementById("myModal");
-    var span = document.getElementsByClassName("close")[0];
-    var modalData = document.getElementById("modalData");
+    window.onload = function() {
+      function fetchViewData(url, containerId) {
+        fetch(url, {
+          method: 'GET',
+        })
+                .then(response => response.json())
+                .then(data => {
+                  console.log(data);
+                  var container = document.getElementById(containerId);
+                  container.textContent = ''; // 清除可能存在的任何旧数据
 
-    // 当用户点击 X 符号或点击（模态框之外的）任何地方，关闭模态框
-    span.onclick = function() {
-      modal.style.display = "none";
-    }
-    window.onclick = function(event) {
-      if (event.target == modal) {
-        modal.style.display = "none";
+                  // 创建一个表格来存储数据
+                  var table = document.createElement('table');
+
+                  if (data.length > 0) {
+                    var keys = Object.keys(data[0]);
+
+                    // 创建表头
+                    var headerRow = document.createElement('tr');
+                    keys.forEach(key => {
+                      var headerCell = document.createElement('th');
+                      headerCell.textContent = key;
+                      headerRow.appendChild(headerCell);
+                    });
+                    table.appendChild(headerRow);
+
+                    // 创建数据行
+                    data.forEach(item => {
+                      var row = document.createElement('tr');
+                      keys.forEach(key => {
+                        var cell = document.createElement('td');
+                        cell.textContent = item[key];
+                        row.appendChild(cell);
+                      });
+                      table.appendChild(row);
+                    });
+                  }
+
+                  container.appendChild(table);
+
+                })
+                .catch((error) => {
+                  console.error('Error:', error);
+                });
       }
-    }
 
-    function fetchViewData() {
-      fetch('https://your-backend.com/view-data', {
-        method: 'GET',
-      })
-              .then(response => response.json())
-              .then(data => {
+      // 添加事件监听器，在用户点击视图按钮时调用 fetchViewData 函数
+      document.getElementById('viewButton').addEventListener('click', function () {
+        fetchViewData('/CarsRental/employee/selectEmployeeGender', 'modalData1'); // 第一个区域的数据
+        fetchViewData('/CarsRental/employee/selectEmployeePosition', 'modalData2'); // 第二个区域的数据
+        fetchViewData('/CarsRental/employee/selectEmployeeWorkload', 'modalData3'); // 第三个区域的数据
+        var modal = document.getElementById("myModal")
+        modal.style.display = 'block'; // 显示模态框
+      });
+      function closeModal() {
+        var modal = document.getElementById("myModal");
+        modal.style.display = 'none'; // 隐藏模态框
+      }
 
-                // 创建一个表格来存储数据
-                var table = document.createElement('table');
+      // 添加事件监听器，在点击关闭按钮时调用 closeModal 函数
+      document.getElementById('closeButton').addEventListener('click', function () {
+        closeModal();
+      });
 
-                // 在数据对象中为每个键值对创建一个表格行
-                for (var key in data) {
-                  // 创建一个表格行和两个单元格
-                  var row = document.createElement('tr');
-                  var cellKey = document.createElement('td');
-                  var cellValue = document.createElement('td');
-
-                  // 将键和值放入相应的单元格并将单元格添加到行
-                  cellKey.textContent = key;
-                  cellValue.textContent = data[key];
-                  row.appendChild(cellKey);
-                  row.appendChild(cellValue);
-
-                  // 将行添加到表格
-                  table.appendChild(row);
-                }
-
-                // 将表格放入模态框数据区域并显示模态框
-                modalData.textContent = '';       // 清除可能存在的任何旧数据
-                modalData.appendChild(table);
-                modal.style.display = 'block';
-              })
-              .catch((error) => {
-                console.error('Error:', error);
-              });
-    }
-
-
-    // 添加事件监听器，在用户点击视图按钮时调用 fetchViewData 函数
-    document.getElementById('viewButton').addEventListener('click', fetchViewData);
-
+    };
 
 
   </script>
@@ -688,11 +697,11 @@
       <label>homeTelNo: <input type="text" id="homeTelNo" class="client-input" data-key="homeTelNo"></label><br>
       <label>empEmailAddress: <input type="text" id="empEmailAddress" class="client-input" data-key="empEmailAddress"></label><br>
       <label>socialSecurityNumber: <input type="text" id="socialSecurityNumber" class="client-input" data-key="socialSecurityNumber"></label><br>
-      <label>dOB: <input type="text" id="dOB" class="client-input" data-key="dOB"></label><br>
+      <label>dOB: <input type="date" id="dOB" class="client-input" data-key="dOB"></label><br>
       <label>position: <input type="text" id="position" class="client-input" data-key="position"></label><br>
       <label>gender: <input type="text" id="gender" class="client-input" data-key="gender"></label><br>
       <label>salary: <input type="text" id="salary" class="client-input" data-key="salary"></label><br>
-      <label>dateStarted: <input type="text" id="dateStarted" class="client-input" data-key="dateStarted"></label><br>
+      <label>dateStarted: <input type="date" id="dateStarted" class="client-input" data-key="dateStarted"></label><br>
       <label>outletNo: <input type="text" id="outletNo" class="client-input" data-key="outletNo"></label><br>
 
       <button class="add-client-button" onclick="addClient()">add</button>
@@ -716,11 +725,11 @@
       <label for="edithomeTelNo">homeTelNo:</label> <input type="text" id="edithomeTelNo" class="client-input" data-key="homeTelNo"><br>
       <label for="editempEmailAddress">empEmailAddress:</label> <input type="text" id="editempEmailAddress" class="client-input" data-key="empEmailAddress"><br>
       <label for="editsocialSecurityNumber">socialSecurityNumber:</label> <input type="text" id="editsocialSecurityNumber" class="client-input" data-key="socialSecurityNumber"><br>
-      <label for="editdOB">dOB:</label> <input type="text" id="editdOB" class="client-input" data-key="dOB"><br>
+      <label for="editdOB">dOB:</label> <input type="date" id="editdOB" class="client-input" data-key="dOB"><br>
       <label for="editposition">position:</label> <input type="text" id="editposition" class="client-input" data-key="position"><br>
       <label for="editgender">gender:</label> <input type="text" id="editgender" class="client-input" data-key="gender"><br>
       <label for="editsalary">salary:</label> <input type="text" id="editsalary" class="client-input" data-key="salary"><br>
-      <label for="editdateStarted">dateStarted:</label> <input type="text" id="editdateStarted" class="client-input" data-key="dateStarted"><br>
+      <label for="editdateStarted">dateStarted:</label> <input type="date" id="editdateStarted" class="client-input" data-key="dateStarted"><br>
       <label for="editoutletNo">outletNo:</label> <input type="text" id="editoutletNo" class="client-input" data-key="outletNo"><br>
 
 
@@ -750,11 +759,11 @@
     homeTelNo: <input type="text" id="searchhomeTelNo"><br>
     empEmailAddress: <input type="text" id="searchempEmailAddress"><br>
     socialSecurityNumber: <input type="text" id="searchsocialSecurityNumber"><br>
-    dOB: <input type="text" id="searchdOB"><br>
+    dOB: <input type="date" id="searchdOB"><br>
     position: <input type="text" id="searchposition"><br>
     gender: <input type="text" id="searchgender"><br>
     salary: <input type="text" id="searchsalary"><br>
-    dateStarted: <input type="text" id="searchdateStarted"><br>
+    dateStarted: <input type="date" id="searchdateStarted"><br>
     outletNo: <input type="text" id="searchoutletNo"><br>
 
     <button onclick="search()">查找</button>
@@ -767,9 +776,24 @@
 <!-- 模态框结构 -->
 <div id="myModal" class="modal">
   <!-- 模态框内容 -->
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <p id="modalData">No data</p>  <!-- 这里是我们将显示数据的地方 -->
+  <div class="modal-contents">
+    <div class="modal-row">
+      <div class="modal-section modal-section-left">
+        <h2>员工性别</h2>
+        <div id="modalData1"></div> <!-- 左侧区域的数据 -->
+      </div>
+      <div class="modal-section modal-section-center">
+        <h2>员工职位</h2>
+        <div id="modalData2"></div> <!-- 中间区域的数据 -->
+      </div>
+      <div class="modal-section modal-section-right">
+        <h2>错误报表</h2>
+        <div id="modalData3"></div> <!-- 右侧区域的数据 -->
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button id="closeButton">关闭</button>
+    </div>
   </div>
 </div>
 

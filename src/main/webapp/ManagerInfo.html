@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="css/clientInfo.css" />
-  <title>Client Information</title>
+  <title>Manager Information</title>
   <style>
     body {
       background-image: url(imgs/log.svg);
@@ -19,7 +19,7 @@
 </head>
 <script>
   // Fetch initial data from backend
-  fetch('/CarsRental/client/selectEmployee')
+  fetch('/CarsRental/employee/selectEmployee')
           .then(response => response.json())
           .then(data => {
             // Fill the data into the input fields
@@ -116,16 +116,16 @@
   }
 </script>
 <body>
-	<!-- 导航栏 -->
-  <nav>
-    <div class="buttons">
-      <a href="SelectVehicleByManager.html" class="nav-button">车辆信息</a>
-      <a href="SelectEmployeeByManager.html" class="nav-button ">技工信息</a>
-      <a href="ManagerInfo.html" class="nav-button active">个人中心</a>
-    </div>
-  </nav>
+<!-- 导航栏 -->
+<nav>
+  <div class="buttons">
+    <a href="SelectVehicleByManager.html" class="nav-button">车辆信息</a>
+    <a href="SelectEmployeeByManager.html" class="nav-button ">技工信息</a>
+    <a href="ManagerInfo.html" class="nav-button active">个人中心</a>
+  </div>
+</nav>
 <div class="container">
-  <h1>Client Information</h1>
+  <h1>Manager Information</h1>
   <form id="clientForm">
     <div class="client-info">
       <div class="info-item">

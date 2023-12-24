@@ -9,208 +9,208 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-  var outletForm = document.getElementById('outletForm');
-  var outletDataPlaceholder = document.getElementById('outletDataPlaceholder');
+    document.addEventListener("DOMContentLoaded", function () {
+        var outletForm = document.getElementById('outletForm');
+        var outletDataPlaceholder = document.getElementById('outletDataPlaceholder');
 
-  outletForm.addEventListener('submit', function (event) {
-    event.preventDefault();
-    submitOutletForm();
-  });
-});
-
-function generateOutletOptions(filteredData) {
-  var selectOutlet = document.getElementById('selectOutlet');
-  selectOutlet.innerHTML = '<option value="">请选择门店</option>'; // 清空所有选项
-
-  // 生成门店选项
-  for (let i = 0; i < filteredData.length; i++) {
-    var option = document.createElement('option');
-    option.value = filteredData[i].outletNo;
-    option.text = filteredData[i].outletNo;
-    selectOutlet.appendChild(option);
-  }
-  selectOutlet.style.display = 'table';
-}
-
-	function selectOutlet(outletNo) {
-	  console.log('选择的门店编号：', outletNo);
-	  
-	  // 发送门店编号到后端
-	  fetch('/CarsRental/vehicle/selectVehicleToClient', {
-		method: 'POST',
-		headers: {
-		  'Content-Type': 'application/json'
-		},
-		body: JSON.stringify({ outletNo: outletNo })
-	  })
-		.then(response => {
-		  if (response.ok) {
-			console.log('成功向后端发送门店编号');
-			// 获取从后端返回的数据
-			return response.json();
-		  } else {
-			console.log('向后端发送门店编号时遇到错误');
-			throw new Error('向后端发送门店编号时遇到错误');
-		  }
-		})
-		.then(data => {
-		  // 将数据传递到下一个页面
-		  sessionStorage.setItem('outletData', JSON.stringify(data));
-		  // 跳转到下一个页面
-		  window.location.href = 'Outlet.html';
-		})
-		.catch(error => {
-		  console.error(error);
-		});
-	}
-
-function submitOutletForm() {
-  var outletStreet = document.getElementById('outletStreet').value;
-  var outletCity = document.getElementById('outletCity').value;
-  var outletState = document.getElementById('outletState').value;
-  
-  var searchQuery = {
-    outletStreet: outletStreet,
-    outletCity: outletCity,
-    outletState: outletState
-  };
-  
-  // 发送搜索条件到后端
-  fetch('/CarsRental/outlet/selectOutletByCondition', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(searchQuery)
-  })
-    .then(response => {
-      if (response.ok) {
-        return response.json(); // 将响应数据解析为 JSON
-      } else {
-        throw new Error('获取门店信息时遇到错误');
-      }
-    })
-    .then(data => {
-      console.log('门店信息:', data);
-      // 在这里处理门店信息，例如更新前端页面上的内容
-      var outletInfoHTML = '';
-      if (data.length > 0) {
-        var outletInfoTable = document.getElementById('outletInfo');
-        outletInfoTable.style.display = 'table';
-
-        for (let i = 0; i < data.length; i++) {
-          outletInfoHTML += '<tr onclick="selectOutlet(' + data[i].outletNo + ')">';
-          outletInfoHTML += '<td>' + data[i].outletNo + '</td>';
-          outletInfoHTML += '<td>' + data[i].outletStreet + '</td>';
-          outletInfoHTML += '<td>' + data[i].outletCity + '</td>';
-          outletInfoHTML += '<td>' + data[i].outletState + '</td>';
-          outletInfoHTML += '<td>' + data[i].outletZipCode + '</td>';
-          outletInfoHTML += '<td>' + data[i].outletTelNo + '</td>';
-          outletInfoHTML += '<td>' + data[i].outletFaxNo + '</td>';
-          outletInfoHTML += '</tr>';
-        }
-        generateOutletOptions(data);
-      } else {
-        outletInfoHTML = '<tr><td colspan="7">未找到相关门店信息。</td></tr>';
-      }
-
-      var outletInfoContainer = document.getElementById('outletInfoBody');
-      outletInfoContainer.innerHTML = outletInfoHTML;
-    })
-    .catch(error => {
-      console.log('获取门店信息时遇到错误:', error);
-      // 在这里处理错误，例如显示错误提示或进行适当的错误处理
+        outletForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            submitOutletForm();
+        });
     });
-}
 
-			
+    function generateOutletOptions(filteredData) {
+        var selectOutlet = document.getElementById('selectOutlet');
+        selectOutlet.innerHTML = '<option value="">请选择门店</option>'; // 清空所有选项
+
+        // 生成门店选项
+        for (let i = 0; i < filteredData.length; i++) {
+            var option = document.createElement('option');
+            option.value = filteredData[i].outletNo;
+            option.text = filteredData[i].outletNo;
+            selectOutlet.appendChild(option);
+        }
+        selectOutlet.style.display = 'table';
+    }
+
+    function selectOutlet(outletNo) {
+        console.log('选择的门店编号：', outletNo);
+
+        // 发送门店编号到后端
+        fetch('/CarsRental/vehicle/selectVehicleToClient', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ outletNo: outletNo })
+        })
+            .then(response => {
+                if (response.ok) {
+                    console.log('成功向后端发送门店编号');
+                    // 获取从后端返回的数据
+                    return response.json();
+                } else {
+                    console.log('向后端发送门店编号时遇到错误');
+                    throw new Error('向后端发送门店编号时遇到错误');
+                }
+            })
+            .then(data => {
+                // 将数据传递到下一个页面
+                sessionStorage.setItem('outletData', JSON.stringify(data));
+                // 跳转到下一个页面
+                window.location.href = 'Outlet.html';
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }
+
+    function submitOutletForm() {
+        var outletStreet = document.getElementById('outletStreet').value;
+        var outletCity = document.getElementById('outletCity').value;
+        var outletState = document.getElementById('outletState').value;
+
+        var searchQuery = {
+            outletStreet: outletStreet,
+            outletCity: outletCity,
+            outletState: outletState
+        };
+
+        // 发送搜索条件到后端
+        fetch('/CarsRental/outlet/selectOutletByCondition', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(searchQuery)
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json(); // 将响应数据解析为 JSON
+                } else {
+                    throw new Error('获取门店信息时遇到错误');
+                }
+            })
+            .then(data => {
+                console.log('门店信息:', data);
+                // 在这里处理门店信息，例如更新前端页面上的内容
+                var outletInfoHTML = '';
+                if (data.length > 0) {
+                    var outletInfoTable = document.getElementById('outletInfo');
+                    outletInfoTable.style.display = 'table';
+
+                    for (let i = 0; i < data.length; i++) {
+                        outletInfoHTML += '<tr onclick="selectOutlet(' + data[i].outletNo + ')">';
+                        outletInfoHTML += '<td>' + data[i].outletNo + '</td>';
+                        outletInfoHTML += '<td>' + data[i].outletStreet + '</td>';
+                        outletInfoHTML += '<td>' + data[i].outletCity + '</td>';
+                        outletInfoHTML += '<td>' + data[i].outletState + '</td>';
+                        outletInfoHTML += '<td>' + data[i].outletZipCode + '</td>';
+                        outletInfoHTML += '<td>' + data[i].outletTelNo + '</td>';
+                        outletInfoHTML += '<td>' + data[i].outletFaxNo + '</td>';
+                        outletInfoHTML += '</tr>';
+                    }
+                    generateOutletOptions(data);
+                } else {
+                    outletInfoHTML = '<tr><td colspan="7">未找到相关门店信息。</td></tr>';
+                }
+
+                var outletInfoContainer = document.getElementById('outletInfoBody');
+                outletInfoContainer.innerHTML = outletInfoHTML;
+            })
+            .catch(error => {
+                console.log('获取门店信息时遇到错误:', error);
+                // 在这里处理错误，例如显示错误提示或进行适当的错误处理
+            });
+    }
 
 
-	
+
+
+
 
 </script>
 <body>
 
-    <!-- 顶部信息栏 -->
-    <div class="top-bar">
-        <p class="welcome-message">欢迎来到天天租车</p>
-        <p class="contact-number">服务咨询电话：8888888</p>
+<!-- 顶部信息栏 -->
+<div class="top-bar">
+    <p class="welcome-message">欢迎来到天天租车</p>
+    <p class="contact-number">服务咨询电话：8888888</p>
+</div>
+
+<!-- 导航栏 -->
+<nav>
+    <div class="buttons">
+        <a href="#" class="nav-button">首页</a>
+        <a href="#" class="nav-button">门店</a>
+        <a href="#" class="nav-button">车辆信息</a>
+        <a href="#" class="nav-button">个人中心</a>
     </div>
+</nav>
 
-    <!-- 导航栏 -->
-    <nav>
-        <div class="buttons">
-            <a href="#" class="nav-button">首页</a>
-            <a href="#" class="nav-button">门店</a>
-            <a href="#" class="nav-button">车辆信息</a>
-            <a href="#" class="nav-button">个人中心</a>
-        </div>
-    </nav>
+<!-- 主要内容 -->
+<main>
+    <!-- 门店信息 -->
+    <section>
+        <h2>门店信息</h2>
+        <form id="outletForm">
+            <div class="form-group">
+                <label for="outletStreet">门店街道：</label>
+                <input type="text" id="outletStreet" name="outletStreet" class="form-control" >
+            </div>
+            <div class="form-group">
+                <label for="outletCity">门店城市：</label>
+                <input type="text" id="outletCity" name="outletCity" class="form-control" >
+            </div>
+            <div class="form-group">
+                <label for="outletState">门店州：</label>
+                <input type="text" id="outletState" name="outletState" class="form-control" >
+            </div>
+            <button type="button" class="btn btn-primary" onclick="submitOutletForm()">查询</button>
+        </form>
+        <div id="outletDataPlaceholder"></div> <!-- 用于显示占位元素 -->
 
-    <!-- 主要内容 -->
-    <main>
-        <!-- 门店信息 -->
-<section>
-    <h2>门店信息</h2>
-    <form id="outletForm">
-        <div class="form-group">
-            <label for="outletStreet">门店街道：</label>
-            <input type="text" id="outletStreet" name="outletStreet" class="form-control" >
-        </div>
-        <div class="form-group">
-            <label for="outletCity">门店城市：</label>
-            <input type="text" id="outletCity" name="outletCity" class="form-control" >
-        </div>
-        <div class="form-group">
-            <label for="outletState">门店州：</label>
-            <input type="text" id="outletState" name="outletState" class="form-control" >
-        </div>
-        <button type="button" class="btn btn-primary" onclick="submitOutletForm()">查询</button>
-    </form>
-		<div id="outletDataPlaceholder"></div> <!-- 用于显示占位元素 -->
+        <table id="outletInfo" class="mt-4" style="display: none;">  <!-- 初始状态隐藏表格 -->
+            <thead>
+            <tr>
+                <th>门店编号</th>
+                <th>门店街道</th>
+                <th>门店城市</th>
+                <th>门店州</th>
+                <th>门店邮政编码</th>
+                <th>门店电话号码</th>
+                <th>门店传真号码</th>
+            </tr>
+            </thead>
+            <tbody id="outletInfoBody">  <!-- 数据行会在 JavaScript 中动态生成 -->
+            </tbody>
+        </table>
+        <select id="selectOutlet" onchange="selectOutlet(this.value)" style="display: none;margin-left: 47%;">
+            <option value="">请选择门店</option>
+        </select>
 
-			<table id="outletInfo" class="mt-4" style="display: none;">  <!-- 初始状态隐藏表格 -->
-				<thead>
-					<tr>
-						<th>门店编号</th>
-						<th>门店街道</th>
-						<th>门店城市</th>
-						<th>门店州</th>
-						<th>门店邮政编码</th>
-						<th>门店电话号码</th>
-						<th>门店传真号码</th>
-					</tr>
-				</thead>
-				<tbody id="outletInfoBody">  <!-- 数据行会在 JavaScript 中动态生成 -->
-				</tbody>
-			</table>
-			<select id="selectOutlet" onchange="selectOutlet(this.value)" style="display: none;margin-left: 47%;">
-			  <option value="">请选择门店</option>
-			</select>
-
-</section>
+    </section>
 
 
-        <!-- 门店介绍 -->
-        <section>
-            <h2>门店介绍</h2>
-            <p class="grey-text">全国连锁，值得信赖，数百家门店任您挑选</p>
-            <img src="image/case.png" alt="">
-        </section>
+    <!-- 门店介绍 -->
+    <section>
+        <h2>门店介绍</h2>
+        <p class="grey-text">全国连锁，值得信赖，数百家门店任您挑选</p>
+        <img src="image/case.png" alt="">
+    </section>
 
-        <!-- 公司介绍 -->
-        <section>
-            <h2>公司介绍</h2>
-            <p>欢迎使用我们的汽车租赁服务。提供100+车型，100+门店，安全保障，无限量程。</p>
-        </section>
-    </main>
+    <!-- 公司介绍 -->
+    <section>
+        <h2>公司介绍</h2>
+        <p>欢迎使用我们的汽车租赁服务。提供100+车型，100+门店，安全保障，无限量程。</p>
+    </section>
+</main>
 
-    <!-- 底部 -->
-    <footer>
-        <p>&copy; 2023 天天租车 | 技术支持：大数据2101蒋海潮</p>
-    </footer>
+<!-- 底部 -->
+<footer>
+    <p>&copy; 2023 天天租车 | 技术支持：大数据2101蒋海潮</p>
+</footer>
 
-    
+
 </body>
 </html>

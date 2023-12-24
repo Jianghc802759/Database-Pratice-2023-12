@@ -2,6 +2,7 @@
 <html>
 
 <head>
+  <meta charset="UTF-8">
   <title>普通技工</title>
   <style>
     /* 用于美化页面样式的 CSS 代码 */
@@ -35,148 +36,121 @@
     th {
       background-color: #f2f2f2;
     }
-	nav {
-	    display: flex;
-	    justify-content: center; /* 居中显示导航栏 */
-	    background-color: #333; /* 导航栏背景颜色 */
-	    padding: 10px;
-	    border-bottom: 1px solid #ddd;
-	    position: relative;
-	    z-index: 2; /* 使导航栏显示在轮播图片上方 */
-	}
-	
-	
-	
-	.buttons {
-	    display: flex;
-	}
-	
-	.nav-button {
-	    text-decoration: none;
-	    color: #fff; /* 导航栏按钮文字颜色 */
-	    font-weight: bold;
-	    font-size: 16px;
-	    padding: 10px;
-	    margin: 0 20px; /* 调整按钮之间的间隔 */
-	    transition: background-color 0.3s ease;
-	}
-	
-	.nav-button:hover {
-	    background-color: yellow; /* 鼠标悬停时按钮背景颜色 */
-	}
-	.nav-button.active {
-	  background-color: darkblue; /* 活动页面按钮背景颜色 */
-	}
+    nav {
+      display: flex;
+      justify-content: center; /* 居中显示导航栏 */
+      background-color: #333; /* 导航栏背景颜色 */
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      position: relative;
+      z-index: 2; /* 使导航栏显示在轮播图片上方 */
+    }
+
+
+
+    .buttons {
+      display: flex;
+    }
+
+    .nav-button {
+      text-decoration: none;
+      color: #fff; /* 导航栏按钮文字颜色 */
+      font-weight: bold;
+      font-size: 16px;
+      padding: 10px;
+      margin: 0 20px; /* 调整按钮之间的间隔 */
+      transition: background-color 0.3s ease;
+    }
+
+    .nav-button:hover {
+      background-color: yellow; /* 鼠标悬停时按钮背景颜色 */
+    }
+    .nav-button.active {
+      background-color: darkblue; /* 活动页面按钮背景颜色 */
+    }
   </style>
 </head>
 
 <body>
-  <nav>
-    <div class="buttons">
-      <a href="SelectJuniorBySenior.html" class="nav-button active">普通技工</a>
-      <a href="SeniorInfo.html" class="nav-button ">个人中心</a>
-    </div>
-  </nav>
+<nav>
+  <div class="buttons">
+    <a href="SelectJuniorBySenior.html" class="nav-button active">普通技工</a>
+    <a href="SeniorInfo.html" class="nav-button ">个人中心</a>
+  </div>
+</nav>
 
-  <table>
-    <thead>
-      <tr>
-        <th>员工编号</th>
-        <th>职称</th>
-        <th>名字</th>
-        <th>中间名</th>
-        <th>姓氏</th>
-        <th>地址</th>
-        <th>工作电话分机</th>
-        <th>家庭电话号码</th>
-        <th>员工电子邮件地址</th>
-        <th>社会安全号码</th>
-		<th>出生日期</th>
-		<th>职位</th>
-		<th>性别</th>
-		<th>工资</th>
-		<th>入职日期</th>
-		<th>所属门店编号</th>
-      </tr>
-    </thead>
-    <tbody id="vehicleTableBody"></tbody>
-  </table>
+<table>
+  <thead>
+  <tr>
+    <th>员工编号</th>
+    <th>名字</th>
+    <th>中间名</th>
+    <th>姓氏</th>
+    <th>工作电话分机</th>
+    <th>性别</th>
+    <th>入职日期</th>
+  </tr>
+  </thead>
+  <tbody id="vehicleTableBody"></tbody>
+</table>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
 
-      fetch('/CarsRental/employee/selectJuniorBySenior')
-        .then(response => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            throw new Error('请求接口时遇到错误');
-          }
-        })
-        .then(data => {
-          // 处理从接口返回的数据
-          console.log(data);
+    fetch('/CarsRental/employee/selectJuniorBySenior')
+            .then(response => {
+              if (response.ok) {
+                return response.json();
+              } else {
+                throw new Error('请求接口时遇到错误');
+              }
+            })
+            .then(data => {
+              // 处理从接口返回的数据
+              console.log(data);
 
 
-          displayVehicleInfo(data);
-        })
-        .catch(error => {
-          console.log('请求接口时遇到错误:', error);
-          // 在这里处理错误，例如显示错误提示或进行适当的错误处理
-        });
+              displayVehicleInfo(data);
+            })
+            .catch(error => {
+              console.log('请求接口时遇到错误:', error);
+              // 在这里处理错误，例如显示错误提示或进行适当的错误处理
+            });
+  });
+
+  function displayVehicleInfo(vehicles) {
+    const vehicleTableBody = document.getElementById('vehicleTableBody');
+    vehicleTableBody.innerHTML = '';
+
+    vehicles.forEach(vehicle => {
+      const row = document.createElement('tr');
+
+      const employeeNo = createTableCell(vehicle.employeeNo);
+      const firstName = createTableCell(vehicle.firstName);
+      const middleName = createTableCell(vehicle.middleName);
+      const lastName = createTableCell(vehicle.lastName);
+      const workTelExt = createTableCell(vehicle.workTelExt);
+      const gender = createTableCell(vehicle.gender);
+      const dateStarted = createTableCell(vehicle.dateStarted);
+
+      row.appendChild(employeeNo);
+      row.appendChild(firstName);
+      row.appendChild(middleName);
+      row.appendChild(lastName);
+      row.appendChild(workTelExt);
+      row.appendChild(gender);
+      row.appendChild(dateStarted);
+
+      vehicleTableBody.appendChild(row);
     });
+  }
 
-    function displayVehicleInfo(vehicles) {
-      const vehicleTableBody = document.getElementById('vehicleTableBody');
-      vehicleTableBody.innerHTML = '';
-
-      vehicles.forEach(vehicle => {
-        const row = document.createElement('tr');
-
-        const employeeNo = createTableCell(vehicle.employeeNo);
-        const title = createTableCell(vehicle.title);
-        const firstName = createTableCell(vehicle.firstName);
-        const middleName = createTableCell(vehicle.middleName);
-        const lastName = createTableCell(vehicle.lastNamelastName);
-        const address = createTableCell(vehicle.address);
-        const workTelExt = createTableCell(vehicle.workTelExt);
-        const homeTelNo = createTableCell(vehicle.homeTelNo);
-        const empEmailAddress = createTableCell(vehicle.empEmailAddress);
-        const socialSecurityNumber = createTableCell(vehicle.socialSecurityNumber);
-		const DOB = createTableCell(vehicle.DOB);
-		const position = createTableCell(vehicle.position);
-		const gender = createTableCell(vehicle.gender);
-		const salary = createTableCell(vehicle.salary);
-		const dateStarted = createTableCell(vehicle.dateStarted);
-		const outletNo = createTableCell(vehicle.outletNo);
-		
-        row.appendChild(employeeNo);
-        row.appendChild(title);
-        row.appendChild(firstName);
-        row.appendChild(middleName);
-        row.appendChild(lastName);
-        row.appendChild(address);
-        row.appendChild(workTelExt);
-        row.appendChild(homeTelNo);
-        row.appendChild(empEmailAddress);
-        row.appendChild(socialSecurityNumber);
-		row.appendChild(DOB);
-		row.appendChild(position);
-		row.appendChild(gender);
-		row.appendChild(salary);
-		row.appendChild(dateStarted);
-		row.appendChild(outletNo);
-		
-        vehicleTableBody.appendChild(row);
-      });
-    }
-
-    function createTableCell(value) {
-      const cell = document.createElement('td');
-      cell.textContent = value;
-      return cell;
-    }
-  </script>
+  function createTableCell(value) {
+    const cell = document.createElement('td');
+    cell.textContent = value;
+    return cell;
+  }
+</script>
 </body>
 
 </html>

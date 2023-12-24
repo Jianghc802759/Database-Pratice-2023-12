@@ -130,28 +130,28 @@ footer {
     z-index: 2; /* 使底部显示在轮播图片上方 */
 }
 thead th {
-  padding: 10px; /* 增加内边距 */
-  text-align: center; /* 居中对齐 */
+    padding: 10px; /* 增加内边距 */
+    text-align: center; /* 居中对齐 */
 }
 
 #outletInfo {
-  margin-top: 2rem;
-  margin-left: 18%;
-  font-size: 1.5rem;
+    margin-top: 2rem;
+    margin-left: 18%;
+    font-size: 1.5rem;
 }
 
 select#selectOutlet {
-  background-color: #f2f2f2; /* 下拉框背景颜色 */
-  border: none; /* 移除边框 */
-  padding: 10px; /* 添加内边距 */
-  font-size: 16px; /* 字体大小 */
-  color: #333; /* 字体颜色 */
+    background-color: #f2f2f2; /* 下拉框背景颜色 */
+    border: none; /* 移除边框 */
+    padding: 10px; /* 添加内边距 */
+    font-size: 16px; /* 字体大小 */
+    color: #333; /* 字体颜色 */
 }
 
 /* 下拉框选项的样式 */
 select#selectOutlet option {
-  background-color: white; /* 选项背景颜色 */
+    background-color: white; /* 选项背景颜色 */
 }
-    .nav-button.active {
-      background-color: darkblue; /* 活动页面按钮背景颜色 */
-    }
+.nav-button.active {
+    background-color: darkblue; /* 活动页面按钮背景颜色 */
+}

@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     // 当前页面就是首页，无需跳转
                     break;
                 case '门店':
-                    window.location.href = 'SelectOutlet.html'; // 替换为门店页面的 URL
+                    window.location.href = 'Outlet.html'; // 替换为门店页面的 URL
                     break;
                 case '车辆信息':
                     window.location.href = 'Vehicles.html'; // 替换为车辆信息页面的 URL

@@ -19,7 +19,7 @@
 </head>
 <script>
   // Fetch initial data from backend
-  fetch('/CarsRental/client/selectEmployee')
+  fetch('/CarsRental/employee/selectEmployee')
           .then(response => response.json())
           .then(data => {
             // Fill the data into the input fields
@@ -117,7 +117,7 @@
 </script>
 <body>
 <div class="container">
-  <h1>Client Information</h1>
+  <h1>Employee Information</h1>
   <form id="clientForm">
     <div class="client-info">
       <div class="info-item">
