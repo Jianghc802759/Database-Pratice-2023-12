@@ -1,8 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Caveat&display=swap');
-
-body{
-	font-family: 'Caveat', cursive;
-}
+ @import url('https://fonts.googleapis.com/css2?family=Caveat&display=swap'); 
+ 
+ body{
+ 	font-family: 'Caveat', cursive;
+ }
 .container {
 	background-color: #F3F4F6;
 	opacity: 0.8;
@@ -23,43 +23,76 @@ h1 {
 	margin-top: 20px;
 	font-size: 1.5rem;
 	margin-left: 200px;
-
+	
 }
 
 .info-item {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	text-align: left; /* 文本从左边对齐 */
-	margin-bottom: 10px;
+	    display: flex;
+	    justify-content: center;
+	    align-items: center;
+	    text-align: left; /* 文本从左边对齐 */
+	    margin-bottom: 10px;
 }
 
-label {
-	display: inline-block;
-	width: 150px; /* 设置固定宽度 */
-	text-align: right; /* 设置文本右对齐 */
-	margin-right: 50px; /* 添加适当的右边距 */
-	font-weight: bold;
-}
+label {			
+			    display: inline-block;
+			    width: 150px; /* 设置固定宽度 */
+			    text-align: right; /* 设置文本右对齐 */
+			    margin-right: 50px; /* 添加适当的右边距 */
+			    font-weight: bold;
+        }
 input {
-	flex: 1;
-	border: none;
-	border-radius: 25px;
-	outline: none;
-	background-color: transparent;
-	font-size: 1.2rem;
+    flex: 1;
+    border: none;
+    border-radius: 25px;
+    outline: none;
+    background-color: transparent;
+    font-size: 1.2rem;
 }
 
 
 .centered {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
 }
 
 #submitBtn {
-	padding: 10px 20px; /* 你可以根据需要调整按钮的大小 */
-	font-size: 16px; /* 你可以根据需要调整按钮的字体大小 */
-	background-color: coral;
+  padding: 10px 20px; /* 你可以根据需要调整按钮的大小 */
+  font-size: 16px; /* 你可以根据需要调整按钮的字体大小 */
+  background-color: coral;
 }
+
+nav {
+    display: flex;
+    justify-content: center; /* 居中显示导航栏 */
+    background-color: #333; /* 导航栏背景颜色 */
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    position: relative;
+    z-index: 2; /* 使导航栏显示在轮播图片上方 */
+}
+
+
+
+.buttons {
+    display: flex;
+}
+
+.nav-button {
+    text-decoration: none;
+    color: #fff; /* 导航栏按钮文字颜色 */
+    font-weight: bold;
+    font-size: 16px;
+    padding: 10px;
+    margin: 0 20px; /* 调整按钮之间的间隔 */
+    transition: background-color 0.3s ease;
+}
+
+.nav-button:hover {
+    background-color: yellow; /* 鼠标悬停时按钮背景颜色 */
+}
+    .nav-button.active {
+      background-color: darkblue; /* 活动页面按钮背景颜色 */
+    }

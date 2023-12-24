@@ -78,7 +78,7 @@ h1 {
 
 /* 主要内容样式 */
 main {
-    padding: 20px;
+    padding: 200px;
 }
 
 section {
@@ -152,3 +152,6 @@ select#selectOutlet {
 select#selectOutlet option {
   background-color: white; /* 选项背景颜色 */
 }
+    .nav-button.active {
+      background-color: darkblue; /* 活动页面按钮背景颜色 */
+    }
