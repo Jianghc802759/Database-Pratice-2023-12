@@ -76,6 +76,14 @@ public interface VehicleMapper {
     List<Vehicle> selectVehicleByPageAndCondition(@Param("begin")int begin, @Param("size")int size, @Param("vehicle")Vehicle vehicle);
 
     /**
+     * 查询汽车行驶里程
+     * @param vehLicenseNo
+     * @return
+     */
+    @Select("select vehicleMile from VehicleMile where vehLicenseNo = #{vehLicenseNo}")
+    Integer selectVehicleMile(String vehLicenseNo);
+
+    /**
      * 条件查询总数
      * @param vehicle
      * @return

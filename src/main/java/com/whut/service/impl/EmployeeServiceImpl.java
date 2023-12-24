@@ -34,7 +34,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         try{
             while(true){
-                String employeeNo = "E" + generateUserId.getUserId();
+                String employeeNo = employee.getPosition().charAt(0) + generateUserId.getUserId();
                 if(userIDMapper.getIDCount(employeeNo) == 0){
                     employee.setEmployeeNo(employeeNo);
                     employeeMapper.addEmployee(employee);

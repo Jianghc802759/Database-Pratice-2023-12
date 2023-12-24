@@ -118,6 +118,18 @@ public class VehicleServiceImpl implements VehicleService {
         return vehicles;
     }
 
+    @Override
+    public Integer selectVehicleMile(String vehLicenseNo) {
+        SqlSession sqlSession = factory.openSession();
+        VehicleMapper vehicleMapper = sqlSession.getMapper(VehicleMapper.class);
+
+        Integer vehicleMile = vehicleMapper.selectVehicleMile(vehLicenseNo);
+
+        sqlSession.close();
+
+        return vehicleMile;
+    }
+
     /**
      * 客户查询可用汽车
      * @param outlet

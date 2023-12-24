@@ -1,5 +1,6 @@
 package com.whut.service.impl;
 
+import com.whut.mapper.PolicyIDMapper;
 import com.whut.mapper.RentalAgreementMapper;
 import com.whut.pojo.PageBean;
 import com.whut.pojo.RentalAgreement;
@@ -93,7 +94,7 @@ public class RentalAgreementServiceImpl implements RentalAgreementService {
     }
 
     @Override
-    public List<Map<String, String>> selectRentalAgeementByOutlet() {
+    public List<Map<String, String>> selectRentalAgreementByOutlet() {
         SqlSession sqlSession = factory.openSession();
         RentalAgreementMapper rentalAgreementMapper = sqlSession.getMapper(RentalAgreementMapper.class);
 
@@ -102,6 +103,18 @@ public class RentalAgreementServiceImpl implements RentalAgreementService {
         sqlSession.close();
 
         return agreement;
+    }
+
+    @Override
+    public Integer selectPolicyNoCount(String policyNo) {
+        SqlSession sqlSession = factory.openSession();
+        PolicyIDMapper policyIDMapper = sqlSession.getMapper(PolicyIDMapper.class);
+
+        int count = policyIDMapper.getIDCount(policyNo);
+
+        sqlSession.close();
+
+        return count;
     }
 
     /**

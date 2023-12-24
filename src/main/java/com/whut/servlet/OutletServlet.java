@@ -81,6 +81,7 @@ public class OutletServlet extends BaseServlet {
         List<Map<String,String>> outletCitys = outletService.selectOutletCity();
 
         String jsonString = JSON.toJSONString(outletCitys);
+        System.out.println(jsonString);
 
         response.setContentType("text/json;charset=utf-8");
         response.getWriter().write(jsonString);

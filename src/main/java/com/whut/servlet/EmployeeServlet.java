@@ -68,9 +68,10 @@ public class EmployeeServlet extends BaseServlet {
 
       if(employeeService.employeeLogin(username, password)){
          HttpSession session = request.getSession();
-         session.setAttribute("employeeNo",username);
          Integer outletNo = employeeService.selectEmployee(username).getOutletNo();
          session.setAttribute("outletNo",outletNo);
+         session.setAttribute("employeeNo",username);
+         System.out.println(username);
 
          response.getWriter().write("{\"success\": true}");
       } else{
@@ -81,10 +82,14 @@ public class EmployeeServlet extends BaseServlet {
    public void selectEmployee(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
       HttpSession session = request.getSession();
       String employeeNo = (String) session.getAttribute("employeeNo");
+      System.out.println(employeeNo);
 
       Employee employee = employeeService.selectEmployee(employeeNo);
 
       String jsonString = JSON.toJSONString(employee);
+
+      System.out.println("展示员工信息");
+      System.out.println(jsonString);
 
       response.setContentType("text/json;charset=utf-8");
       response.getWriter().write(jsonString);
@@ -128,7 +133,7 @@ public class EmployeeServlet extends BaseServlet {
 
    public void selectEmployeeByManager(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
       HttpSession session = request.getSession();
-      int outletNo = Integer.parseInt((String) session.getAttribute("outletNo"));
+      int outletNo = (Integer) session.getAttribute("outletNo");
 
       List<Employee2Manager> employee2Managers = employeeService.selectEmployeeByManager(outletNo);
 
@@ -140,7 +145,7 @@ public class EmployeeServlet extends BaseServlet {
 
    public void selectJuniorBySenior(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
       HttpSession session = request.getSession();
-      int outletNo = Integer.parseInt((String) session.getAttribute("outletNo"));
+      int outletNo = (Integer) session.getAttribute("outletNo");
 
       List<Junior2SeniorTechnician> junior2SeniorTechnicians = employeeService.selectJuniorBySenior(outletNo);
       String jsonString = JSON.toJSONString(junior2SeniorTechnicians);

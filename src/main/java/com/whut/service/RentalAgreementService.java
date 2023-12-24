@@ -29,7 +29,14 @@ public interface RentalAgreementService {
      * 查询门店业绩
      * @return
      */
-    List<Map<String, String>> selectRentalAgeementByOutlet();
+    List<Map<String, String>> selectRentalAgreementByOutlet();
+
+    /**
+     * 查询保单编号数量
+     * @param policyNo
+     * @return
+     */
+    Integer selectPolicyNoCount(String policyNo);
 
     /**
      * 查询所有协议

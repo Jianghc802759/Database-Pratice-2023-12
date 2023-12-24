@@ -37,7 +37,7 @@ public interface EmployeeMapper {
      * @param employeeNo
      * @return
      */
-    @Select("select * from Employee where empployeeNo = #{employeeNo}")
+    @Select("select * from Employee where employeeNo = #{employeeNo}")
     Employee selectEmployee(String employeeNo);
 
     /**
@@ -59,16 +59,16 @@ public interface EmployeeMapper {
      * @param outletNo
      * @return
      */
-    @Select("select * from EmployeeToManagerView where outlet = #{outlet}")
+    @Select("select * from EmployeeToManagerView where outletNo = #{outletNo}")
     List<Employee2Manager> selectEmployeeByManager(int outletNo);
 
     /**
      * 根据高级技工返回所在门店的普通技工
-     * @param outlet
+     * @param outletNo
      * @return
      */
-    @Select("select * from JuniorToSeniorTechnicianView where outlet = #{outlet}")
-    List<Junior2SeniorTechnician> selectJuniorBySenior(int outlet);
+    @Select("select * from JuniorToSeniorTechnicianView where outletNo = #{outletNo}")
+    List<Junior2SeniorTechnician> selectJuniorBySenior(int outletNo);
 
     /**
      * 查询所有员工

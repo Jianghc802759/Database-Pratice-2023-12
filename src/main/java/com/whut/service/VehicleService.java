@@ -32,6 +32,13 @@ public interface VehicleService {
     List<Vehicle> selectAllVehicle();
 
     /**
+     * 查询汽车行驶里程
+     * @param vehLicenseNo
+     * @return
+     */
+    Integer selectVehicleMile(String vehLicenseNo);
+
+    /**
      *  查询可用汽车
      * @param outlet
      * @return

@@ -81,8 +81,6 @@ public class VehicleServlet extends BaseServlet {
 
         response.setContentType("text/json;charset=utf-8");
         response.getWriter().write(jsonString);
-        String contentType = response.getContentType();
-        response.sendRedirect(contentType + "/selectVehicleToClient.html");
     }
 
     public void selectVehicleMake(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
@@ -125,7 +123,8 @@ public class VehicleServlet extends BaseServlet {
 
     public void selectVehicleByManager(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         HttpSession session = request.getSession();
-        int outletNo = Integer.parseInt((String) session.getAttribute("outletNo"));
+        int outletNo = (Integer) session.getAttribute("outletNo");
+        System.out.println(outletNo);
 
         List<Vehicle> vehicles = vehicleService.selectVehicleByOutlet(outletNo);
 
