@@ -35,14 +35,49 @@
     th {
       background-color: #f2f2f2;
     }
+	nav {
+	    display: flex;
+	    justify-content: center; /* 居中显示导航栏 */
+	    background-color: #333; /* 导航栏背景颜色 */
+	    padding: 10px;
+	    border-bottom: 1px solid #ddd;
+	    position: relative;
+	    z-index: 2; /* 使导航栏显示在轮播图片上方 */
+	}
+	
+	
+	
+	.buttons {
+	    display: flex;
+	}
+	
+	.nav-button {
+	    text-decoration: none;
+	    color: #fff; /* 导航栏按钮文字颜色 */
+	    font-weight: bold;
+	    font-size: 16px;
+	    padding: 10px;
+	    margin: 0 20px; /* 调整按钮之间的间隔 */
+	    transition: background-color 0.3s ease;
+	}
+	
+	.nav-button:hover {
+	    background-color: yellow; /* 鼠标悬停时按钮背景颜色 */
+	}
+	.nav-button.active {
+	  background-color: darkblue; /* 活动页面按钮背景颜色 */
+	}
   </style>
 </head>
 
 <body>
-  <h1>
-    <label style="margin-right: 50px;"></label>
-    <label style="color: #007bff;">门 店 车 辆</label>
-  </h1>
+  <nav>
+    <div class="buttons">
+      <a href="SelectVehicleByManager.html" class="nav-button active" >车辆信息</a>
+      <a href="SelectEmployeeByManager.html" class="nav-button ">技工信息</a>
+      <a href="ManagerInfo.html" class="nav-button">个人中心</a>
+    </div>
+  </nav>
 
   <table>
     <thead>

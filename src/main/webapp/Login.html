@@ -59,13 +59,13 @@
 					.then(response => {
 						if (response.ok) {
 							// 如果成功，重定向到客户界面
-							window.location.href = 'ClientInfo.html'; // 替换为客户界面的页面地址
+							window.location.href = 'ClientHome.html'; // 替换为客户界面的页面地址
 						} else {
 							alert('登录失败');
 						}
 					})
 					.catch(error => console.error('错误:', error));
-				} else if (username.startsWith('E')) {
+				} else {
 					// 调用员工接口
 					fetch('/CarsRental/employee/employeeLogin', {
 						method: 'POST',
@@ -77,13 +77,22 @@
 					.then(response => {
 						if (response.ok) {
 							// 如果成功，重定向到员工界面
-							window.location.href = 'EmployeeInfo.html'; // 替换为员工界面的页面地址
+							if(username.startsWith('M')){
+								window.location.href = 'ManagerHome.html';  //经理
+							}
+							else if(username.startsWith('S')){
+								window.location.href = 'SeniorHome.html';   //高级技工
+							}
+							else if(username.startsWith('J')){
+								window.location.href = 'JuniorHome.html';      //普通技工
+							}
 						} else {
 							alert('登录失败');
 						}
 					})
 					.catch(error => console.error('错误:', error));
-				} else {
+				} 
+				else {
 					alert('无效的账号');
 				}
 			});

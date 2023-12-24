@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+  <title>门店信息</title>
+  <style>
+    /* 用于美化页面样式的 CSS 代码 */
+    body {
+          font-family: Arial, sans-serif;
+          background-color: #f4f4f4;
+        }
+    
+        .container {
+          max-width: 400px;
+          margin: 0 auto;
+          padding: 20px;
+          background-color: #fff;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    
+    
+        label,
+        input,
+        textarea {
+          display: block;
+          width: 50%;
+          margin-bottom: 10px;
+		  margin-left: 25%;
+		  padding: 20px;
+        }
+    
+        input[type="submit"] {
+          background-color: #4CAF50;
+          color: #fff;
+          border: none;
+          padding: 10px;
+          cursor: pointer;
+          font-weight: bold;
+		  width: 40%;
+		  margin-left: 30%;
+        }
+    
+        input[type="submit"]:hover {
+          background-color: #45a049;
+        }
+
+    h1 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      background-color: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    th,
+    td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center; /* 居中显示导航栏 */
+      background-color: #333; /* 导航栏背景颜色 */
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      position: relative;
+      z-index: 2; /* 使导航栏显示在轮播图片上方 */
+    }
+
+    .buttons {
+      display: flex;
+    }
+
+    .nav-button {
+      text-decoration: none;
+      color: #fff; /* 导航栏按钮文字颜色 */
+      font-weight: bold;
+      font-size: 16px;
+      padding: 10px;
+      margin: 0 20px; /* 调整按钮之间的间隔 */
+      transition: background-color 0.3s ease;
+    }
+
+    .nav-button:hover {
+      background-color: yellow; /* 鼠标悬停时按钮背景颜色 */
+    }
+
+    /* 添加活动页面样式 */
+    .nav-button.active {
+      background-color: darkblue; /* 活动页面按钮背景颜色 */
+    }
+  </style>
+</head>
+
+<body>
+    <nav>
+        <div class="buttons">
+            <a href="SelectFaultByJunior.html" class="nav-button active">错误报表</a>
+            <a href="JuniorInfo.html" class="nav-button">个人中心</a>
+        </div>
+    </nav>
+
+<h1>添加故障报告</h1>
+  <form id="faultReportForm">
+    <label for="vehLicenseNo">车辆牌照号:</label>
+    <input type="text" id="vehLicenseNo" name="vehLicenseNo" required><br><br>
+
+    <label for="dateChecked">检查日期:</label>
+    <input type="date" id="dateChecked" name="dateChecked" required><br><br>
+
+    <label for="timeChecked">检查时间:</label>
+    <input type="time" id="timeChecked" name="timeChecked" required><br><br>
+
+    <label for="comments">备注:</label>
+    <textarea id="comments" name="comments" rows="4" cols="50"></textarea><br><br>
+
+    <label for="employeeNo">员工编号:</label>
+    <input type="number" id="employeeNo" name="employeeNo" required><br><br>
+
+    <input type="submit" value="提交">
+  </form>
+
+  <script>
+	 document.getElementById("faultReportForm").addEventListener("submit", function(event) {
+	   event.preventDefault(); // 阻止表单默认的提交行为
+	 
+	   var form = document.getElementById("faultReportForm");
+	   var formData = new FormData(form);
+	 
+	   var jsonObject = {};
+	   formData.forEach(function(value, key) {
+		 jsonObject[key] = value;
+	   });
+	 
+	   var jsonData = JSON.stringify(jsonObject);
+	 
+	   fetch("/CarsRental/faultReport/addFaultReport", {
+		 method: "POST",
+		 headers: {
+		   "Content-Type": "application/json"
+		 },
+		 body: jsonData
+	   })
+	   .then(function(response) {
+		 if (response.ok) {
+		   // 请求成功
+		   alert("故障报告添加成功！");
+		   form.reset(); // 清空表单
+		 } else {
+		   // 请求失败
+		   alert("故障报告添加失败！");
+		 }
+	   })
+	   .catch(function(error) {
+		 // 发生网络错误或其他异常
+		 alert("发生错误：" + error.message);
+	   });
+	 });
+  </script>
+
+
+
+  
+
+</body>
+
+</html>
